@@ -79,6 +79,200 @@
   .home-status-head,.home-status-row{grid-template-columns:1fr .85fr}
 }
 
+
+/* v1.9 dashboard stage refinement */
+.dashboard-wrap{
+  min-height:calc(100dvh - 36px);
+  display:grid;
+  align-items:start;
+}
+.dashboard-stage{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(245,158,11,.22);
+  border-radius:22px;
+  min-height:520px;
+  background:#050505;
+  box-shadow:0 18px 52px rgba(0,0,0,.38);
+}
+.dashboard-stage::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:var(--dash-bg);
+  background-size:cover;
+  background-position:center 45%;
+  filter:brightness(.62) contrast(1.05) saturate(.95);
+  transform:scale(1.01);
+}
+.dashboard-stage::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(245,158,11,.13),transparent 32%),
+    linear-gradient(180deg,rgba(2,2,2,.36) 0%,rgba(2,2,2,.54) 52%,rgba(2,2,2,.83) 100%),
+    linear-gradient(90deg,rgba(2,2,2,.76) 0%,rgba(2,2,2,.30) 38%,rgba(2,2,2,.62) 100%);
+}
+.dash-watermark{
+  position:absolute;
+  top:22px;
+  left:24px;
+  z-index:2;
+  width:118px;
+  opacity:.72;
+  filter:drop-shadow(0 12px 28px rgba(0,0,0,.70));
+}
+.dashboard-content{
+  position:relative;
+  z-index:3;
+  min-height:520px;
+  display:flex;
+  align-items:flex-end;
+  padding:24px;
+}
+.dash-overlay-grid{
+  width:100%;
+  display:grid;
+  grid-template-columns:minmax(420px,.72fr) minmax(360px,.58fr);
+  gap:14px;
+  align-items:stretch;
+}
+.home-card,.notice-card{
+  min-height:214px;
+  box-shadow:none;
+  background:rgba(7,8,9,.78);
+  border-color:rgba(245,158,11,.24);
+  backdrop-filter:blur(14px);
+}
+.home-card .panel-title,.notice-card .panel-title{
+  height:30px;
+  align-items:center;
+  margin-bottom:8px;
+}
+.home-card .panel-title h3,.notice-card .panel-title h3{
+  font-size:14px;
+}
+.home-month-select{
+  position:relative;
+  width:138px;
+  margin-bottom:8px;
+}
+.home-month-select select{
+  appearance:none;
+  -webkit-appearance:none;
+  width:100%;
+  padding:8px 32px 8px 11px;
+  border-radius:12px;
+  border-color:rgba(245,158,11,.35);
+  background:rgba(17,16,13,.92);
+  color:#fff;
+  font-weight:900;
+}
+.home-month-select::after{
+  content:"▾";
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#fbbf24;
+  font-size:11px;
+  pointer-events:none;
+}
+.home-status-table{
+  border:1px solid rgba(245,158,11,.24);
+  border-radius:13px;
+  overflow:hidden;
+  background:rgba(0,0,0,.28);
+}
+.home-status-head,.home-status-row{
+  display:grid;
+  grid-template-columns:1fr 86px;
+  align-items:center;
+}
+.home-status-head{
+  background:rgba(245,158,11,.11);
+  color:#f8fafc;
+  font-size:11px;
+  font-weight:900;
+}
+.home-status-head div,.home-status-row div{
+  padding:8px 10px;
+  border-right:1px solid rgba(245,158,11,.13);
+}
+.home-status-head div:last-child,.home-status-row div:last-child{
+  border-right:0;
+  text-align:center;
+}
+.home-status-row{
+  font-size:12px;
+  border-top:1px solid rgba(245,158,11,.12);
+}
+.home-week{
+  font-weight:950;
+  white-space:nowrap;
+}
+.home-status-row .badge{
+  padding:3px 8px;
+  font-size:11px;
+}
+.notice-card .mini-list{
+  gap:0;
+}
+.notice-card .mini-item{
+  align-items:flex-start;
+  padding:8px 0;
+}
+.notice-card .mini-item b{
+  color:#fbbf24;
+  font-size:11px;
+  min-width:42px;
+  text-align:right;
+}
+.notice-title{
+  display:block;
+  font-weight:900;
+  color:#fff;
+  font-size:13px;
+}
+.notice-body{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.42;
+  max-height:34px;
+  overflow:hidden;
+}
+.home-empty{
+  padding:16px;
+  border:1px dashed rgba(245,158,11,.26);
+  border-radius:13px;
+  color:var(--muted);
+  text-align:center;
+  background:rgba(0,0,0,.24);
+}
+@media(max-width:980px){
+  .dashboard-stage{
+    min-height:auto;
+  }
+  .dashboard-content{
+    min-height:auto;
+    padding:118px 12px 12px;
+  }
+  .dash-watermark{
+    width:92px;
+    top:16px;
+    left:16px;
+  }
+  .dash-overlay-grid{
+    grid-template-columns:1fr;
+  }
+  .home-card,.notice-card{
+    min-height:auto;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -146,7 +340,8 @@ function pageHead(title,sub,actions=''){return `<div class="topline axe-page-hea
 function monthSelectHtml(id){return `<label style="min-width:150px">기준월<input id="${id}" type="month" value="${esc(currentMonth())}" onchange="loadData(this.value)"></label>`}
 
 
-function renderHome(){const d=state.data||{},notices=d.notices||[],selected=currentMonth(),mine=(d.monthly_status||[]).filter(r=>r['닉네임']===state.session.nickname),rows=mine.filter(r=>String(r['기준월'])===String(selected));document.getElementById("screenHome").innerHTML=`<div class="dashboard-wrap"><div class="card dash-banner"><img class="dash-photo" src="AXE ALL.png" alt="AXE 단체샷"><img class="dash-banner-logo" src="axe.png" alt="AXE"></div><div class="dash-main-grid"><div class="card home-card"><div class="panel-title"><h3>내 월별현황</h3><span class="pill">${esc(state.session.nickname)}</span></div><div class="home-controls"><div class="home-month-select">${homeMonthSelect(mine,selected)}</div></div>${homeMonthlyContent(rows)}</div><div class="card notice-card"><div class="panel-title"><h3>운영공지</h3><span class="pill">공지사항</span></div>${noticeList(notices)}</div></div></div>`}
+
+function renderHome(){const d=state.data||{},notices=d.notices||[],selected=currentMonth(),mine=(d.monthly_status||[]).filter(r=>r['닉네임']===state.session.nickname),rows=mine.filter(r=>String(r['기준월'])===String(selected));document.getElementById("screenHome").innerHTML=`<div class="dashboard-wrap"><div class="dashboard-stage" style="--dash-bg:url('AXE ALL.png')"><img class="dash-watermark" src="axe.png" alt="AXE"><div class="dashboard-content"><div class="dash-overlay-grid"><div class="card home-card"><div class="panel-title"><h3>내 월별현황</h3><span class="pill">${esc(state.session.nickname)}</span></div><div class="home-month-select">${homeMonthSelect(mine,selected)}</div>${homeMonthlyContent(rows)}</div><div class="card notice-card"><div class="panel-title"><h3>운영공지</h3><span class="pill">공지사항</span></div>${noticeList(notices)}</div></div></div></div></div>`}
 function homeMonthSelect(rows,selected){const months=[...new Set((rows||[]).map(r=>String(r['기준월']||'')).filter(Boolean))].sort();if(!months.includes(selected))months.push(selected);months.sort();return `<select id="homeMonthSelect" onchange="loadData(this.value)">${months.map(m=>`<option value="${esc(m)}" ${m===selected?'selected':''}>${formatMonthLabel(m)}</option>`).join('')}</select>`}
 function formatMonthLabel(m){const parts=String(m||'').split('-');if(parts.length===2)return `${Number(parts[0])}년 ${Number(parts[1])}월`;return esc(m)}
 function formatWeekLabel(month,week){const p=String(month||'').split('-');const mm=p.length===2?Number(p[1]):'';return `${mm}월 ${Number(week)||week}주차`}
