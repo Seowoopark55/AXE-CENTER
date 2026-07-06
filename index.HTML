@@ -45,7 +45,7 @@
     .member-actions{display:flex;gap:5px;flex-wrap:wrap}.member-actions .btn{padding:6px 8px;font-size:11px;border-radius:9px}.compact-form{max-width:760px}.member-summary-note{font-size:12px;color:#94a3b8;margin-top:6px}
 
   
-/* v1.11 clean dashboard + AXE orange theme */
+/* v1.12 shared banner + balanced dashboard */
 html,body{
   background:
     radial-gradient(circle at 18% -10%,rgba(245,158,11,.14),transparent 34%),
@@ -56,39 +56,182 @@ html,body{
 .nav button.active{border-color:rgba(245,158,11,.48)!important;background:linear-gradient(135deg,rgba(245,158,11,.20),rgba(251,191,36,.08))!important}
 .btn{background:linear-gradient(135deg,#f59e0b,#d97706)!important}
 .btn.secondary{background:#1f2937!important;color:#e5e7eb!important;border:1px solid var(--line)!important}
-input:focus,select:focus,textarea:focus{border-color:rgba(245,158,11,.72)!important;box-shadow:0 0 0 3px rgba(245,158,11,.12)!important}
 .seg button.active{border-color:rgba(245,158,11,.55)!important;background:rgba(245,158,11,.16)!important}
+input:focus,select:focus,textarea:focus{border-color:rgba(245,158,11,.72)!important;box-shadow:0 0 0 3px rgba(245,158,11,.12)!important}
 .blue{color:#fbbf24!important}
-.dashboard-shell{display:grid;gap:12px}
-.dash-photo-card{position:relative;overflow:hidden;height:210px;padding:0;border:1px solid rgba(245,158,11,.20);border-radius:20px;background:#050505;box-shadow:none}
-.dash-photo-card img.dash-cover{width:100%;height:100%;display:block;object-fit:cover;object-position:center 48%;filter:brightness(.93) contrast(1.02) saturate(1)}
-.dash-photo-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02) 0%,rgba(0,0,0,.08) 48%,rgba(0,0,0,.34) 100%)}
-.dash-logo-overlay{position:absolute;left:18px;top:16px;z-index:2;width:116px;opacity:.86;filter:drop-shadow(0 12px 28px rgba(0,0,0,.75));mix-blend-mode:normal}
-.dash-panels{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.58fr);gap:12px;align-items:start}
-.dash-panel{min-height:136px;box-shadow:none;background:rgba(10,10,10,.78);border-color:rgba(245,158,11,.22);padding:11px 12px}
-.dash-panel .panel-title{height:25px;min-height:25px;margin-bottom:8px;align-items:center}
-.dash-panel .panel-title h3{font-size:13px;line-height:1}
-.dash-panel .pill{padding:4px 8px;font-size:11px}
-.home-month-select{width:132px;margin-bottom:8px;position:relative}
-.home-month-select select{appearance:none;-webkit-appearance:none;width:100%;padding:7px 30px 7px 10px;border-radius:10px;border-color:rgba(245,158,11,.36);background:rgba(17,16,13,.92);color:#fff;font-weight:900;font-size:12px}
-.home-month-select::after{content:"▾";position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#fbbf24;font-size:11px;pointer-events:none}
-.week-compact{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
-.week-chip{border:1px solid rgba(245,158,11,.20);background:rgba(0,0,0,.28);border-radius:11px;padding:8px 7px;display:grid;gap:5px;align-items:center;justify-items:center;min-height:62px}
-.week-chip b{font-size:12px;white-space:nowrap}
-.week-chip .badge{font-size:10.5px;padding:2px 7px}
-.notice-compact{display:grid;gap:0}
-.notice-compact-item{display:grid;grid-template-columns:minmax(0,1fr) 42px;gap:8px;align-items:start;padding:7px 0;border-bottom:1px solid var(--line2)}
+.page-stack{display:grid;gap:12px}
+.shared-axe-banner{
+  position:relative;
+  height:132px;
+  overflow:hidden;
+  border:1px solid rgba(245,158,11,.20);
+  border-radius:20px;
+  background:#050505;
+  box-shadow:none;
+}
+.shared-axe-banner .banner-cover{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center 48%;
+  display:block;
+  filter:brightness(.92) contrast(1.02) saturate(1);
+}
+.shared-axe-banner::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.02) 0%,rgba(0,0,0,.07) 52%,rgba(0,0,0,.38) 100%),
+    linear-gradient(90deg,rgba(0,0,0,.32) 0%,rgba(0,0,0,.03) 42%,rgba(0,0,0,.20) 100%);
+}
+.shared-axe-banner .banner-logo{
+  position:absolute;
+  left:18px;
+  top:15px;
+  z-index:2;
+  width:112px;
+  opacity:.86;
+  filter:drop-shadow(0 12px 28px rgba(0,0,0,.78));
+}
+.axe-page-head{
+  margin:0!important;
+  padding:0 2px 2px;
+}
+.axe-page-head h2{
+  font-size:20px!important;
+}
+.axe-page-head p{
+  display:none!important;
+}
+.dashboard-balance{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  align-items:stretch;
+}
+.dashboard-card{
+  min-height:156px;
+  box-shadow:none;
+  background:rgba(10,10,10,.78);
+  border-color:rgba(245,158,11,.22);
+  padding:11px 12px;
+}
+.dashboard-card .panel-title{
+  height:25px;
+  min-height:25px;
+  margin-bottom:8px;
+  align-items:center;
+}
+.dashboard-card .panel-title h3{
+  font-size:13px;
+  line-height:1;
+}
+.dashboard-card .pill{
+  padding:4px 8px;
+  font-size:11px;
+}
+.home-month-select{
+  width:132px;
+  margin-bottom:8px;
+  position:relative;
+}
+.home-month-select select{
+  appearance:none;
+  -webkit-appearance:none;
+  width:100%;
+  padding:7px 30px 7px 10px;
+  border-radius:10px;
+  border-color:rgba(245,158,11,.36);
+  background:rgba(17,16,13,.92);
+  color:#fff;
+  font-weight:900;
+  font-size:12px;
+}
+.home-month-select::after{
+  content:"▾";
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#fbbf24;
+  font-size:11px;
+  pointer-events:none;
+}
+.week-list{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:7px;
+}
+.week-tile{
+  border:1px solid rgba(245,158,11,.20);
+  background:rgba(0,0,0,.28);
+  border-radius:11px;
+  padding:8px 7px;
+  display:grid;
+  gap:5px;
+  align-items:center;
+  justify-items:center;
+  min-height:62px;
+}
+.week-tile b{
+  font-size:12px;
+  white-space:nowrap;
+}
+.week-tile .badge{
+  font-size:10.5px;
+  padding:2px 7px;
+}
+.notice-compact{
+  display:grid;
+  gap:0;
+}
+.notice-compact-item{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 42px;
+  gap:8px;
+  align-items:start;
+  padding:7px 0;
+  border-bottom:1px solid var(--line2);
+}
 .notice-compact-item:last-child{border-bottom:0}
-.notice-title{font-size:12.5px;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.notice-body{display:block;margin-top:3px;color:var(--muted);font-size:11.5px;line-height:1.35;max-height:31px;overflow:hidden}
-.notice-level{font-size:11px;color:#fbbf24;text-align:right}
-.home-empty{padding:14px;border:1px dashed rgba(245,158,11,.25);border-radius:12px;color:var(--muted);font-size:12px;text-align:center;background:rgba(0,0,0,.22)}
+.notice-title{
+  font-size:12.5px;
+  font-weight:900;
+  color:#fff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.notice-body{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:11.5px;
+  line-height:1.35;
+  max-height:31px;
+  overflow:hidden;
+}
+.notice-level{
+  font-size:11px;
+  color:#fbbf24;
+  text-align:right;
+}
+.home-empty{
+  padding:14px;
+  border:1px dashed rgba(245,158,11,.25);
+  border-radius:12px;
+  color:var(--muted);
+  font-size:12px;
+  text-align:center;
+  background:rgba(0,0,0,.22);
+}
 @media(max-width:980px){
-  .dash-photo-card{height:170px}
-  .dash-logo-overlay{width:92px;left:13px;top:12px}
-  .dash-panels{grid-template-columns:1fr}
-  .week-compact{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .dash-panel{min-height:auto}
+  .shared-axe-banner{height:104px;border-radius:16px}
+  .shared-axe-banner .banner-logo{width:88px;left:12px;top:11px}
+  .dashboard-balance{grid-template-columns:1fr}
+  .dashboard-card{min-height:auto}
+  .week-list{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
 </style>
@@ -154,14 +297,15 @@ function renderNav(){const items=visibleTabs();const make=t=>`<button class="${s
 function switchTab(id){state.tab=id;document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const tab=TABS.find(t=>t.id===id);document.getElementById(tab.screen).classList.add('active');renderNav();renderAll();window.scrollTo({top:0,behavior:'smooth'});}
 async function loadData(month){try{state.month=month||state.month||new Date().toISOString().slice(0,7);const res=await api("get_data",{month:state.month});state.data=res;state.month=res.current_month||state.month;renderAll();}catch(e){toast(e.message)}}
 function renderAll(){if(!state.data)return;renderHome();renderRequest();renderFund();renderMonthly();renderAsset();if(isAdmin()){renderMember();renderBalance();}}
-function pageHead(title,sub,actions=''){return `<div class="topline axe-page-head"><div><div class="eyebrow">AXE WORKCENTER</div><h2>${title}</h2><p>${sub}</p></div><div class="toolbar">${actions}</div></div>`}
+function sharedBanner(){return `<div class="shared-axe-banner"><img class="banner-cover" src="AXE ALL.png" alt="AXE 단체샷"><img class="banner-logo" src="axe.png" alt="AXE"></div>`}
+function pageHead(title,sub,actions=''){return `<div class="page-stack">${sharedBanner()}<div class="topline axe-page-head"><div><div class="eyebrow">AXE WORKCENTER</div><h2>${title}</h2><p>${sub||''}</p></div><div class="toolbar">${actions}</div></div></div>`}
 function monthSelectHtml(id){return `<label style="min-width:150px">기준월<input id="${id}" type="month" value="${esc(currentMonth())}" onchange="loadData(this.value)"></label>`}
 
-function renderHome(){const d=state.data||{},notices=d.notices||[],selected=currentMonth(),mine=(d.monthly_status||[]).filter(r=>r['닉네임']===state.session.nickname),rows=mine.filter(r=>String(r['기준월'])===String(selected));document.getElementById("screenHome").innerHTML=`<div class="dashboard-shell"><div class="dash-photo-card"><img class="dash-cover" src="AXE ALL.png" alt="AXE 단체샷"><img class="dash-logo-overlay" src="axe.png" alt="AXE"></div><div class="dash-panels"><div class="card dash-panel"><div class="panel-title"><h3>내 월별현황</h3><span class="pill">${esc(state.session.nickname)}</span></div><div class="home-month-select">${homeMonthSelect(mine,selected)}</div>${homeMonthlyContent(rows)}</div><div class="card dash-panel"><div class="panel-title"><h3>운영공지</h3><span class="pill">공지사항</span></div>${noticeList(notices)}</div></div></div>`}
+function renderHome(){const d=state.data||{},notices=d.notices||[],selected=currentMonth(),mine=(d.monthly_status||[]).filter(r=>r['닉네임']===state.session.nickname),rows=mine.filter(r=>String(r['기준월'])===String(selected));document.getElementById("screenHome").innerHTML=pageHead('대시보드','',`<button class="btn secondary" onclick="loadData(currentMonth())">새로고침</button>`)+`<div class="dashboard-balance"><div class="card dashboard-card"><div class="panel-title"><h3>내 월별현황</h3><span class="pill">${esc(state.session.nickname)}</span></div><div class="home-month-select">${homeMonthSelect(mine,selected)}</div>${homeMonthlyContent(rows)}</div><div class="card dashboard-card"><div class="panel-title"><h3>운영공지</h3><span class="pill">공지사항</span></div>${noticeList(notices)}</div></div>`}
 function homeMonthSelect(rows,selected){const months=[...new Set((rows||[]).map(r=>String(r['기준월']||'')).filter(Boolean))].sort();if(!months.includes(selected))months.push(selected);months.sort();return `<select id="homeMonthSelect" onchange="loadData(this.value)">${months.map(m=>`<option value="${esc(m)}" ${m===selected?'selected':''}>${formatMonthLabel(m)}</option>`).join('')}</select>`}
 function formatMonthLabel(m){const parts=String(m||'').split('-');if(parts.length===2)return `${Number(parts[0])}년 ${Number(parts[1])}월`;return esc(m)}
 function formatWeekLabel(month,week){const p=String(month||'').split('-');const mm=p.length===2?Number(p[1]):'';return `${mm}월 ${Number(week)||week}주차`}
-function homeMonthlyContent(rows){if(!rows||!rows.length)return `<div class="home-empty">표시할 월별현황이 없습니다.</div>`;const sorted=[...rows].sort((a,b)=>Number(a['주차'])-Number(b['주차']));return `<div class="week-compact">${sorted.map(r=>`<div class="week-chip"><b>${formatWeekLabel(r['기준월'],r['주차'])}</b>${statusBadge(r['상태'])}</div>`).join('')}</div>`}
+function homeMonthlyContent(rows){if(!rows||!rows.length)return `<div class="home-empty">표시할 월별현황이 없습니다.</div>`;const sorted=[...rows].sort((a,b)=>Number(a['주차'])-Number(b['주차']));return `<div class="week-list">${sorted.map(r=>`<div class="week-tile"><b>${formatWeekLabel(r['기준월'],r['주차'])}</b>${statusBadge(r['상태'])}</div>`).join('')}</div>`}
 function noticeList(rows){if(!rows||!rows.length)return `<div class="home-empty">등록된 운영공지가 없습니다.</div>`;const active=rows.filter(n=>String(n['사용여부']||'Y').toUpperCase()!=='N').sort((a,b)=>{const pa=String(a['상단고정']||'').toUpperCase()==='Y'?1:0,pb=String(b['상단고정']||'').toUpperCase()==='Y'?1:0;if(pa!==pb)return pb-pa;return String(b['등록일시']||b['표시시작일']||'').localeCompare(String(a['등록일시']||a['표시시작일']||''));}).slice(0,3);if(!active.length)return `<div class="home-empty">표시 중인 운영공지가 없습니다.</div>`;return `<div class="notice-compact">${active.map(n=>`<div class="notice-compact-item"><div><div class="notice-title">${esc(n['제목']||'공지')}</div><span class="notice-body">${esc(n['내용']||'-')}</span></div><div class="notice-level">${esc(n['중요도']||'일반')}</div></div>`).join('')}</div>`}
 function renderRequest(){const d=state.data||{},all=d.requests||[],month=currentMonth(),mine=all.filter(r=>r.member_id===state.session.member_id),base=isAdmin()?all:mine,pending=base.filter(r=>r['상태']==='대기'),approvedMonth=base.filter(r=>r['상태']==='승인'&&String(r['신청월'])===String(month)),approvedAmount=approvedMonth.reduce((a,r)=>a+num(r['신청금액']),0),b=d.balance||{};document.getElementById("screenRequest").innerHTML=pageHead('공금신청','현재 처리해야 할 공금신청만 표시합니다.',monthSelectHtml('reqMonth'))+`<div class="grid compact-metrics"><div class="card metric"><div class="label">공용계좌 계산 잔액</div><div class="value mono blue">${fmtMoney(b.public_balance)}</div><div class="sub">잔고반영 내역 기준</div></div><div class="card metric"><div class="label">검수대기</div><div class="value mono ${pending.length?'blue':''}">${pending.length}건</div><div class="sub">현재 처리 대상</div></div><div class="card metric"><div class="label">선택월 승인 건</div><div class="value mono">${approvedMonth.length}건</div><div class="sub">${esc(month)} 기준</div></div><div class="card metric"><div class="label">선택월 잔고 인정액</div><div class="value mono good">${fmtMoney(approvedAmount)}</div><div class="sub">승인 신청금액 합계</div></div></div><div class="grid two" style="margin-top:12px"><div class="card"><div class="panel-title"><h3>공금신청 등록</h3><span class="pill">${currentMonth()}</span></div><div class="form two"><label>신청월<input id="frMonth" type="month" value="${esc(currentMonth())}"></label><label>신청주차<select id="frWeek">${weekOptions()}</select></label><label>신청금액<input id="frAmount" inputmode="numeric" placeholder="비우면 기준공금"></label><label>입금계좌<input id="frAccount" value="${esc(d.default_deposit_account||'공용계좌')}"></label><label style="grid-column:1/-1">증빙URL<input id="frEvidence" placeholder="이미지/링크"></label><label style="grid-column:1/-1">메모<textarea id="frMemo" placeholder="필요 시 입력"></textarea></label><button class="btn" onclick="submitFundRequest(this)">공금신청 등록</button></div></div><div class="card"><div class="panel-title"><h3>주차별 기준공금</h3><span class="pill">공금설정 기준</span></div>${weeklyFeeList(d.weekly_fee_by_week||[])}</div></div><div class="card" style="margin-top:12px"><div class="panel-title"><h3>${isAdmin()?'검수대기 신청목록':'내 검수대기 신청'}</h3><span class="pill">${pending.length}건</span></div>${requestTable(pending,isAdmin(),true)}</div>`}
 function renderFund(){const d=state.data||{},b=d.balance||{},ledgers=d.ledgers||[],pending=(d.requests||[]).filter(r=>r['상태']==='대기');document.getElementById("screenFund").innerHTML=pageHead('공금관리','공금 요약, 신청 검수, 내역 등록을 한 화면에서 관리합니다.',`${monthSelectHtml('fundMonth')} ${isAdmin()?'<button class="btn secondary" onclick="loadData(currentMonth())">새로고침</button>':''}`)+`<div class="seg" style="margin-bottom:12px">${['summary:요약','requests:공금신청 관리','ledger:공금내역','manual:직접기입'].map(x=>{const [id,label]=x.split(':');return `<button class="${state.fundSection===id?'active':''}" onclick="state.fundSection='${id}';renderFund()">${label}</button>`}).join('')}</div><div class="grid"><div class="card metric"><div class="label">공용계좌 잔고</div><div class="value mono">${fmtMoney(b.public_balance)}</div><div class="sub">반영내역 ${b.counted_count||0}건</div></div><div class="card metric"><div class="label">수입 합계</div><div class="value mono good">${fmtMoney(b.public_income)}</div><div class="sub">공용계좌 수입</div></div><div class="card metric"><div class="label">지출 합계</div><div class="value mono bad">${fmtMoney(b.public_expense)}</div><div class="sub">공용계좌 지출</div></div><div class="card metric"><div class="label">조정 합계</div><div class="value mono warnc">${fmtMoney(b.public_adjustment)}</div><div class="sub">부호 그대로 반영</div></div></div><div style="margin-top:12px">${fundSectionHtml(state.fundSection,pending,ledgers)}</div>`}
