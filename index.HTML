@@ -45,7 +45,7 @@
     .member-actions{display:flex;gap:5px;flex-wrap:wrap}.member-actions .btn{padding:6px 8px;font-size:11px;border-radius:9px}.compact-form{max-width:760px}.member-summary-note{font-size:12px;color:#94a3b8;margin-top:6px}
 
   
-/* v1.12 shared banner + balanced dashboard */
+/* v1.13 clean rebuild: shared banner, no dashboard title, balanced cards */
 html,body{
   background:
     radial-gradient(circle at 18% -10%,rgba(245,158,11,.14),transparent 34%),
@@ -59,12 +59,13 @@ html,body{
 .seg button.active{border-color:rgba(245,158,11,.55)!important;background:rgba(245,158,11,.16)!important}
 input:focus,select:focus,textarea:focus{border-color:rgba(245,158,11,.72)!important;box-shadow:0 0 0 3px rgba(245,158,11,.12)!important}
 .blue{color:#fbbf24!important}
+
 .page-stack{display:grid;gap:12px}
 .shared-axe-banner{
   position:relative;
-  height:132px;
+  height:170px;
   overflow:hidden;
-  border:1px solid rgba(245,158,11,.20);
+  border:1px solid rgba(245,158,11,.22);
   border-radius:20px;
   background:#050505;
   box-shadow:none;
@@ -82,28 +83,27 @@ input:focus,select:focus,textarea:focus{border-color:rgba(245,158,11,.72)!import
   position:absolute;
   inset:0;
   background:
-    linear-gradient(180deg,rgba(0,0,0,.02) 0%,rgba(0,0,0,.07) 52%,rgba(0,0,0,.38) 100%),
-    linear-gradient(90deg,rgba(0,0,0,.32) 0%,rgba(0,0,0,.03) 42%,rgba(0,0,0,.20) 100%);
+    linear-gradient(180deg,rgba(0,0,0,.01) 0%,rgba(0,0,0,.06) 50%,rgba(0,0,0,.34) 100%),
+    linear-gradient(90deg,rgba(0,0,0,.24) 0%,rgba(0,0,0,.02) 43%,rgba(0,0,0,.14) 100%);
 }
 .shared-axe-banner .banner-logo{
   position:absolute;
-  left:18px;
-  top:15px;
+  left:20px;
+  top:16px;
   z-index:2;
   width:112px;
-  opacity:.86;
-  filter:drop-shadow(0 12px 28px rgba(0,0,0,.78));
+  opacity:.88;
+  filter:drop-shadow(0 12px 28px rgba(0,0,0,.80));
 }
 .axe-page-head{
   margin:0!important;
   padding:0 2px 2px;
 }
-.axe-page-head h2{
-  font-size:20px!important;
-}
-.axe-page-head p{
-  display:none!important;
-}
+.axe-page-head .eyebrow{color:#fbbf24!important}
+.axe-page-head h2{font-size:20px!important}
+.axe-page-head p{display:none!important}
+
+.dashboard-home{display:grid;gap:12px}
 .dashboard-balance{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -111,26 +111,22 @@ input:focus,select:focus,textarea:focus{border-color:rgba(245,158,11,.72)!import
   align-items:stretch;
 }
 .dashboard-card{
-  min-height:156px;
+  height:150px;
   box-shadow:none;
   background:rgba(10,10,10,.78);
   border-color:rgba(245,158,11,.22);
   padding:11px 12px;
+  overflow:hidden;
 }
 .dashboard-card .panel-title{
-  height:25px;
-  min-height:25px;
+  height:24px;
+  min-height:24px;
   margin-bottom:8px;
   align-items:center;
 }
-.dashboard-card .panel-title h3{
-  font-size:13px;
-  line-height:1;
-}
-.dashboard-card .pill{
-  padding:4px 8px;
-  font-size:11px;
-}
+.dashboard-card .panel-title h3{font-size:13px;line-height:1}
+.dashboard-card .pill{padding:4px 8px;font-size:11px}
+
 .home-month-select{
   width:132px;
   margin-bottom:8px;
@@ -174,18 +170,10 @@ input:focus,select:focus,textarea:focus{border-color:rgba(245,158,11,.72)!import
   justify-items:center;
   min-height:62px;
 }
-.week-tile b{
-  font-size:12px;
-  white-space:nowrap;
-}
-.week-tile .badge{
-  font-size:10.5px;
-  padding:2px 7px;
-}
-.notice-compact{
-  display:grid;
-  gap:0;
-}
+.week-tile b{font-size:12px;white-space:nowrap}
+.week-tile .badge{font-size:10.5px;padding:2px 7px}
+
+.notice-compact{display:grid;gap:0}
 .notice-compact-item{
   display:grid;
   grid-template-columns:minmax(0,1fr) 42px;
@@ -212,11 +200,7 @@ input:focus,select:focus,textarea:focus{border-color:rgba(245,158,11,.72)!import
   max-height:31px;
   overflow:hidden;
 }
-.notice-level{
-  font-size:11px;
-  color:#fbbf24;
-  text-align:right;
-}
+.notice-level{font-size:11px;color:#fbbf24;text-align:right}
 .home-empty{
   padding:14px;
   border:1px dashed rgba(245,158,11,.25);
@@ -227,10 +211,10 @@ input:focus,select:focus,textarea:focus{border-color:rgba(245,158,11,.72)!import
   background:rgba(0,0,0,.22);
 }
 @media(max-width:980px){
-  .shared-axe-banner{height:104px;border-radius:16px}
-  .shared-axe-banner .banner-logo{width:88px;left:12px;top:11px}
+  .shared-axe-banner{height:118px;border-radius:16px}
+  .shared-axe-banner .banner-logo{width:90px;left:13px;top:12px}
   .dashboard-balance{grid-template-columns:1fr}
-  .dashboard-card{min-height:auto}
+  .dashboard-card{height:auto;min-height:132px}
   .week-list{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
@@ -301,7 +285,7 @@ function sharedBanner(){return `<div class="shared-axe-banner"><img class="banne
 function pageHead(title,sub,actions=''){return `<div class="page-stack">${sharedBanner()}<div class="topline axe-page-head"><div><div class="eyebrow">AXE WORKCENTER</div><h2>${title}</h2><p>${sub||''}</p></div><div class="toolbar">${actions}</div></div></div>`}
 function monthSelectHtml(id){return `<label style="min-width:150px">기준월<input id="${id}" type="month" value="${esc(currentMonth())}" onchange="loadData(this.value)"></label>`}
 
-function renderHome(){const d=state.data||{},notices=d.notices||[],selected=currentMonth(),mine=(d.monthly_status||[]).filter(r=>r['닉네임']===state.session.nickname),rows=mine.filter(r=>String(r['기준월'])===String(selected));document.getElementById("screenHome").innerHTML=pageHead('대시보드','',`<button class="btn secondary" onclick="loadData(currentMonth())">새로고침</button>`)+`<div class="dashboard-balance"><div class="card dashboard-card"><div class="panel-title"><h3>내 월별현황</h3><span class="pill">${esc(state.session.nickname)}</span></div><div class="home-month-select">${homeMonthSelect(mine,selected)}</div>${homeMonthlyContent(rows)}</div><div class="card dashboard-card"><div class="panel-title"><h3>운영공지</h3><span class="pill">공지사항</span></div>${noticeList(notices)}</div></div>`}
+function renderHome(){const d=state.data||{},notices=d.notices||[],selected=currentMonth(),mine=(d.monthly_status||[]).filter(r=>r['닉네임']===state.session.nickname),rows=mine.filter(r=>String(r['기준월'])===String(selected));document.getElementById("screenHome").innerHTML=`<div class="dashboard-home">${sharedBanner()}<div class="dashboard-balance"><div class="card dashboard-card"><div class="panel-title"><h3>내 월별현황</h3><span class="pill">${esc(state.session.nickname)}</span></div><div class="home-month-select">${homeMonthSelect(mine,selected)}</div>${homeMonthlyContent(rows)}</div><div class="card dashboard-card"><div class="panel-title"><h3>운영공지</h3><span class="pill">공지사항</span></div>${noticeList(notices)}</div></div></div>`}
 function homeMonthSelect(rows,selected){const months=[...new Set((rows||[]).map(r=>String(r['기준월']||'')).filter(Boolean))].sort();if(!months.includes(selected))months.push(selected);months.sort();return `<select id="homeMonthSelect" onchange="loadData(this.value)">${months.map(m=>`<option value="${esc(m)}" ${m===selected?'selected':''}>${formatMonthLabel(m)}</option>`).join('')}</select>`}
 function formatMonthLabel(m){const parts=String(m||'').split('-');if(parts.length===2)return `${Number(parts[0])}년 ${Number(parts[1])}월`;return esc(m)}
 function formatWeekLabel(month,week){const p=String(month||'').split('-');const mm=p.length===2?Number(p[1]):'';return `${mm}월 ${Number(week)||week}주차`}
