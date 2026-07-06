@@ -218,6 +218,138 @@ input:focus,select:focus,textarea:focus{border-color:rgba(245,158,11,.72)!import
   .week-list{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
+
+/* v1.14 dashboard balance hard-fix */
+.dashboard-balance{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:12px !important;
+  align-items:stretch !important;
+}
+.dashboard-card{
+  height:126px !important;
+  min-height:126px !important;
+  max-height:126px !important;
+  overflow:hidden !important;
+  padding:10px 12px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:flex-start !important;
+  box-sizing:border-box !important;
+}
+.dashboard-card .panel-title{
+  height:24px !important;
+  min-height:24px !important;
+  margin:0 0 7px 0 !important;
+  padding:0 !important;
+  align-items:center !important;
+}
+.dashboard-card .panel-title h3{
+  font-size:13px !important;
+  line-height:1 !important;
+}
+.dashboard-card .pill{
+  height:22px !important;
+  padding:3px 8px !important;
+  font-size:11px !important;
+  line-height:1 !important;
+}
+.home-month-select{
+  width:118px !important;
+  height:30px !important;
+  margin:0 0 7px 0 !important;
+}
+.home-month-select select{
+  height:30px !important;
+  padding:6px 28px 6px 10px !important;
+  font-size:12px !important;
+  line-height:1 !important;
+}
+.month-status-compact{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:6px !important;
+}
+.month-status-row{
+  min-height:30px !important;
+  border:1px solid rgba(245,158,11,.20) !important;
+  background:rgba(0,0,0,.26) !important;
+  border-radius:10px !important;
+  padding:6px 8px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:8px !important;
+}
+.month-status-row b{
+  font-size:12px !important;
+  white-space:nowrap !important;
+}
+.month-status-row .badge{
+  font-size:10px !important;
+  padding:2px 7px !important;
+  flex:0 0 auto !important;
+}
+.notice-compact{
+  overflow:hidden !important;
+}
+.notice-compact-item{
+  min-height:28px !important;
+  padding:6px 0 !important;
+}
+.notice-title{
+  font-size:12px !important;
+  line-height:1.15 !important;
+}
+.notice-body{
+  font-size:11px !important;
+  line-height:1.25 !important;
+  max-height:28px !important;
+}
+.home-empty{
+  height:64px !important;
+  display:grid !important;
+  place-items:center !important;
+  padding:0 12px !important;
+}
+@media(max-width:980px){
+  .dashboard-balance{grid-template-columns:1fr !important}
+  .dashboard-card{height:auto !important;min-height:116px !important;max-height:none !important}
+}
+
+
+/* v1.15 banner height hard-fix */
+.shared-axe-banner{
+  height:138px !important;
+  min-height:138px !important;
+  max-height:138px !important;
+}
+.shared-axe-banner .banner-cover{
+  height:138px !important;
+  object-fit:cover !important;
+  object-position:center 48% !important;
+}
+.shared-axe-banner .banner-logo{
+  width:104px !important;
+  left:18px !important;
+  top:14px !important;
+}
+@media(max-width:980px){
+  .shared-axe-banner{
+    height:96px !important;
+    min-height:96px !important;
+    max-height:96px !important;
+  }
+  .shared-axe-banner .banner-cover{
+    height:96px !important;
+  }
+  .shared-axe-banner .banner-logo{
+    width:82px !important;
+    left:12px !important;
+    top:10px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -289,7 +421,8 @@ function renderHome(){const d=state.data||{},notices=d.notices||[],selected=curr
 function homeMonthSelect(rows,selected){const months=[...new Set((rows||[]).map(r=>String(r['기준월']||'')).filter(Boolean))].sort();if(!months.includes(selected))months.push(selected);months.sort();return `<select id="homeMonthSelect" onchange="loadData(this.value)">${months.map(m=>`<option value="${esc(m)}" ${m===selected?'selected':''}>${formatMonthLabel(m)}</option>`).join('')}</select>`}
 function formatMonthLabel(m){const parts=String(m||'').split('-');if(parts.length===2)return `${Number(parts[0])}년 ${Number(parts[1])}월`;return esc(m)}
 function formatWeekLabel(month,week){const p=String(month||'').split('-');const mm=p.length===2?Number(p[1]):'';return `${mm}월 ${Number(week)||week}주차`}
-function homeMonthlyContent(rows){if(!rows||!rows.length)return `<div class="home-empty">표시할 월별현황이 없습니다.</div>`;const sorted=[...rows].sort((a,b)=>Number(a['주차'])-Number(b['주차']));return `<div class="week-list">${sorted.map(r=>`<div class="week-tile"><b>${formatWeekLabel(r['기준월'],r['주차'])}</b>${statusBadge(r['상태'])}</div>`).join('')}</div>`}
+
+function homeMonthlyContent(rows){if(!rows||!rows.length)return `<div class="home-empty">표시할 월별현황이 없습니다.</div>`;const sorted=[...rows].sort((a,b)=>Number(a['주차'])-Number(b['주차']));return `<div class="month-status-compact">${sorted.map(r=>`<div class="month-status-row"><b>${formatWeekLabel(r['기준월'],r['주차'])}</b>${statusBadge(r['상태'])}</div>`).join('')}</div>`}
 function noticeList(rows){if(!rows||!rows.length)return `<div class="home-empty">등록된 운영공지가 없습니다.</div>`;const active=rows.filter(n=>String(n['사용여부']||'Y').toUpperCase()!=='N').sort((a,b)=>{const pa=String(a['상단고정']||'').toUpperCase()==='Y'?1:0,pb=String(b['상단고정']||'').toUpperCase()==='Y'?1:0;if(pa!==pb)return pb-pa;return String(b['등록일시']||b['표시시작일']||'').localeCompare(String(a['등록일시']||a['표시시작일']||''));}).slice(0,3);if(!active.length)return `<div class="home-empty">표시 중인 운영공지가 없습니다.</div>`;return `<div class="notice-compact">${active.map(n=>`<div class="notice-compact-item"><div><div class="notice-title">${esc(n['제목']||'공지')}</div><span class="notice-body">${esc(n['내용']||'-')}</span></div><div class="notice-level">${esc(n['중요도']||'일반')}</div></div>`).join('')}</div>`}
 function renderRequest(){const d=state.data||{},all=d.requests||[],month=currentMonth(),mine=all.filter(r=>r.member_id===state.session.member_id),base=isAdmin()?all:mine,pending=base.filter(r=>r['상태']==='대기'),approvedMonth=base.filter(r=>r['상태']==='승인'&&String(r['신청월'])===String(month)),approvedAmount=approvedMonth.reduce((a,r)=>a+num(r['신청금액']),0),b=d.balance||{};document.getElementById("screenRequest").innerHTML=pageHead('공금신청','현재 처리해야 할 공금신청만 표시합니다.',monthSelectHtml('reqMonth'))+`<div class="grid compact-metrics"><div class="card metric"><div class="label">공용계좌 계산 잔액</div><div class="value mono blue">${fmtMoney(b.public_balance)}</div><div class="sub">잔고반영 내역 기준</div></div><div class="card metric"><div class="label">검수대기</div><div class="value mono ${pending.length?'blue':''}">${pending.length}건</div><div class="sub">현재 처리 대상</div></div><div class="card metric"><div class="label">선택월 승인 건</div><div class="value mono">${approvedMonth.length}건</div><div class="sub">${esc(month)} 기준</div></div><div class="card metric"><div class="label">선택월 잔고 인정액</div><div class="value mono good">${fmtMoney(approvedAmount)}</div><div class="sub">승인 신청금액 합계</div></div></div><div class="grid two" style="margin-top:12px"><div class="card"><div class="panel-title"><h3>공금신청 등록</h3><span class="pill">${currentMonth()}</span></div><div class="form two"><label>신청월<input id="frMonth" type="month" value="${esc(currentMonth())}"></label><label>신청주차<select id="frWeek">${weekOptions()}</select></label><label>신청금액<input id="frAmount" inputmode="numeric" placeholder="비우면 기준공금"></label><label>입금계좌<input id="frAccount" value="${esc(d.default_deposit_account||'공용계좌')}"></label><label style="grid-column:1/-1">증빙URL<input id="frEvidence" placeholder="이미지/링크"></label><label style="grid-column:1/-1">메모<textarea id="frMemo" placeholder="필요 시 입력"></textarea></label><button class="btn" onclick="submitFundRequest(this)">공금신청 등록</button></div></div><div class="card"><div class="panel-title"><h3>주차별 기준공금</h3><span class="pill">공금설정 기준</span></div>${weeklyFeeList(d.weekly_fee_by_week||[])}</div></div><div class="card" style="margin-top:12px"><div class="panel-title"><h3>${isAdmin()?'검수대기 신청목록':'내 검수대기 신청'}</h3><span class="pill">${pending.length}건</span></div>${requestTable(pending,isAdmin(),true)}</div>`}
 function renderFund(){const d=state.data||{},b=d.balance||{},ledgers=d.ledgers||[],pending=(d.requests||[]).filter(r=>r['상태']==='대기');document.getElementById("screenFund").innerHTML=pageHead('공금관리','공금 요약, 신청 검수, 내역 등록을 한 화면에서 관리합니다.',`${monthSelectHtml('fundMonth')} ${isAdmin()?'<button class="btn secondary" onclick="loadData(currentMonth())">새로고침</button>':''}`)+`<div class="seg" style="margin-bottom:12px">${['summary:요약','requests:공금신청 관리','ledger:공금내역','manual:직접기입'].map(x=>{const [id,label]=x.split(':');return `<button class="${state.fundSection===id?'active':''}" onclick="state.fundSection='${id}';renderFund()">${label}</button>`}).join('')}</div><div class="grid"><div class="card metric"><div class="label">공용계좌 잔고</div><div class="value mono">${fmtMoney(b.public_balance)}</div><div class="sub">반영내역 ${b.counted_count||0}건</div></div><div class="card metric"><div class="label">수입 합계</div><div class="value mono good">${fmtMoney(b.public_income)}</div><div class="sub">공용계좌 수입</div></div><div class="card metric"><div class="label">지출 합계</div><div class="value mono bad">${fmtMoney(b.public_expense)}</div><div class="sub">공용계좌 지출</div></div><div class="card metric"><div class="label">조정 합계</div><div class="value mono warnc">${fmtMoney(b.public_adjustment)}</div><div class="sub">부호 그대로 반영</div></div></div><div style="margin-top:12px">${fundSectionHtml(state.fundSection,pending,ledgers)}</div>`}
