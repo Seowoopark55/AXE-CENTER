@@ -4,14 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>AXE 업무센터</title>
-
-  <!-- =========================================================
-       AXE 업무센터 API 설정 위치
-       아래 따옴표 안에 Google Apps Script 웹앱 배포 URL을 넣으세요.
-       예: https://script.google.com/macros/s/배포ID/exec
-       ========================================================= -->
   <script>
-    window.AXE_WORKCENTER_API_URL = "https://script.google.com/macros/s/AKfycbwFOww2zEo-O5zdS0fCO6YDj8uk-bTOqiVY_YbAaqM8v-K2Ujbf9UQ4HJyShAnAKT4c/exec";
+    /* Apps Script 배포 URL 입력 위치 */
+    window.AXE_WORKCENTER_API_URL = "https://script.google.com/macros/s/AKfycbzxC9DaQDIx2yut7IFx1_kJpJgpGZQ6nmpaQgivA8tNkVKbKvHC60TukPhXfbyQH5T5nQ/exec";
   </script>
   <meta name="theme-color" content="#0f172a" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -20,442 +15,53 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="manifest" href="manifest.webmanifest" />
   <style>
-    :root{
-      --bg:#050816; --panel:#0b1020; --panel2:#111827; --card:#111827;
-      --line:rgba(148,163,184,.22); --text:#e5e7eb; --muted:#94a3b8;
-      --accent:#38bdf8; --accent2:#22c55e; --danger:#ef4444; --warn:#f59e0b;
-      --shadow:0 18px 60px rgba(0,0,0,.35); --radius:18px;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;background:radial-gradient(circle at top,#172554 0,#050816 36%,#020617 100%);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
-    button,input,select,textarea{font:inherit}
-    button{cursor:pointer}
-    .app{max-width:1180px;margin:0 auto;padding:16px}
-    .topbar{position:sticky;top:0;z-index:20;margin:-16px -16px 14px;padding:14px 16px 10px;background:rgba(2,6,23,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
-    .brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .brand h1{font-size:22px;line-height:1;margin:0;font-weight:900;letter-spacing:-.04em}
-    .brand p{margin:5px 0 0;color:var(--muted);font-size:12px}
-    .userbox{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;white-space:nowrap}
-    .pill{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:rgba(15,23,42,.7);font-size:12px;color:var(--muted)}
-    .tabs{display:flex;gap:8px;overflow:auto;padding:12px 0 2px;scrollbar-width:none}
-    .tabs::-webkit-scrollbar{display:none}
-    .tab{border:1px solid var(--line);background:rgba(15,23,42,.72);color:var(--muted);border-radius:999px;padding:9px 12px;font-size:13px;white-space:nowrap}
-    .tab.active{background:linear-gradient(135deg,rgba(56,189,248,.22),rgba(34,197,94,.12));border-color:rgba(56,189,248,.55);color:#f8fafc}
-    .screen{display:none}.screen.active{display:block}
-    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .card{background:linear-gradient(180deg,rgba(17,24,39,.92),rgba(15,23,42,.92));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:15px}
-    .card h2,.card h3{margin:0 0 12px;font-size:15px;letter-spacing:-.02em}
-    .metric .label{font-size:12px;color:var(--muted);margin-bottom:8px}.metric .value{font-size:24px;font-weight:900;letter-spacing:-.04em}
-    .muted{color:var(--muted)}.small{font-size:12px}.right{text-align:right}.nowrap{white-space:nowrap}.hide{display:none!important}
-    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row.between{justify-content:space-between}.grow{flex:1}
-    .form{display:grid;gap:10px}.form.two{grid-template-columns:repeat(2,minmax(0,1fr))}.form.three{grid-template-columns:repeat(3,minmax(0,1fr))}
-    label{display:grid;gap:6px;font-size:12px;color:var(--muted)}
-    input,select,textarea{width:100%;border:1px solid rgba(148,163,184,.24);border-radius:12px;background:#020617;color:var(--text);padding:10px 11px;outline:none}
-    textarea{min-height:76px;resize:vertical}
-    input:focus,select:focus,textarea:focus{border-color:rgba(56,189,248,.7);box-shadow:0 0 0 3px rgba(56,189,248,.11)}
-    .btn{border:0;border-radius:12px;background:linear-gradient(135deg,#0284c7,#0891b2);color:white;padding:10px 12px;font-weight:800}
-    .btn.secondary{background:#1f2937;color:#e5e7eb;border:1px solid var(--line)}
-    .btn.green{background:linear-gradient(135deg,#16a34a,#15803d)}
-    .btn.red{background:linear-gradient(135deg,#dc2626,#991b1b)}
-    .btn.warn{background:linear-gradient(135deg,#f59e0b,#b45309)}
-    .btn:disabled{opacity:.55;cursor:not-allowed}
-    .tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:rgba(2,6,23,.42)}
-    table{width:100%;border-collapse:collapse;min-width:780px;font-size:12px}
-    th,td{padding:10px 9px;border-bottom:1px solid rgba(148,163,184,.14);vertical-align:middle;white-space:nowrap}
-    th{position:sticky;top:0;background:#0f172a;color:#cbd5e1;text-align:left;font-weight:800;z-index:1}
-    td.memo{max-width:260px;overflow:hidden;text-overflow:ellipsis}.amount{font-weight:900}.in{color:#86efac}.out{color:#fca5a5}.status{font-weight:800}
-    .badge{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:3px 8px;font-size:11px;color:#cbd5e1;background:rgba(15,23,42,.72)}
-    .badge.ok{border-color:rgba(34,197,94,.45);color:#86efac}.badge.warn{border-color:rgba(245,158,11,.45);color:#fcd34d}.badge.bad{border-color:rgba(239,68,68,.45);color:#fca5a5}
-    .notice{border:1px solid rgba(56,189,248,.25);border-radius:14px;background:rgba(14,165,233,.08);padding:12px;margin-bottom:10px}
-    .login-page{min-height:100dvh;display:grid;place-items:center;padding:20px}.login-card{width:min(440px,100%);background:rgba(15,23,42,.94);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:var(--shadow)}
-    .logo{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#38bdf8,#22c55e);font-weight:1000;color:#020617;margin-bottom:14px}
-    .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:50;max-width:min(680px,calc(100% - 28px));padding:12px 14px;background:#0f172a;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);display:none}.toast.show{display:block}
-    .loader{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;vertical-align:-2px;margin-right:6px}@keyframes spin{to{transform:rotate(360deg)}}
-    @media(max-width:860px){.app{padding:12px}.topbar{margin:-12px -12px 12px;padding:12px}.grid,.grid.two{grid-template-columns:1fr}.form.two,.form.three{grid-template-columns:1fr}.brand{align-items:flex-start}.userbox{flex-direction:column;align-items:flex-end;gap:4px}.metric .value{font-size:21px}table{min-width:720px}}
+    :root{--bg:#050816;--panel:#0b1020;--panel2:#111827;--card:#111827;--line:rgba(148,163,184,.22);--text:#e5e7eb;--muted:#94a3b8;--blue:#38bdf8;--green:#22c55e;--red:#ef4444;--yellow:#f59e0b;--violet:#a78bfa;--shadow:0 18px 60px rgba(0,0,0,.36);--radius:18px}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at top,#172554 0,#050816 34%,#020617 100%);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}button,input,select,textarea{font:inherit}button{cursor:pointer}.hide{display:none!important}.app{max-width:1240px;margin:0 auto;padding:14px}.topbar{position:sticky;top:0;z-index:20;margin:-14px -14px 14px;padding:13px 14px 10px;background:rgba(2,6,23,.84);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand h1{font-size:22px;margin:0;font-weight:950;letter-spacing:-.05em}.brand p{margin:5px 0 0;color:var(--muted);font-size:12px}.userbox{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;white-space:nowrap}.tabs{display:flex;gap:8px;overflow:auto;padding-top:12px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tab{border:1px solid var(--line);background:rgba(15,23,42,.74);color:var(--muted);border-radius:999px;padding:9px 12px;font-size:13px;white-space:nowrap}.tab.active{background:linear-gradient(135deg,rgba(56,189,248,.22),rgba(34,197,94,.12));border-color:rgba(56,189,248,.58);color:#f8fafc}.screen{display:none}.screen.active{display:block}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:linear-gradient(180deg,rgba(17,24,39,.94),rgba(15,23,42,.94));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:15px}.section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 0 12px}.section-title h2,.card h3{margin:0;font-size:15px;letter-spacing:-.02em}.muted{color:var(--muted)}.small{font-size:12px}.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:rgba(15,23,42,.72);font-size:12px;color:#cbd5e1}.metric .label{font-size:12px;color:var(--muted);margin-bottom:8px}.metric .value{font-size:24px;font-weight:950;letter-spacing:-.05em}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}.form{display:grid;gap:10px}.form.two{grid-template-columns:repeat(2,minmax(0,1fr))}.form.three{grid-template-columns:repeat(3,minmax(0,1fr))}label{display:grid;gap:6px;font-size:12px;color:var(--muted)}input,select,textarea{width:100%;border:1px solid rgba(148,163,184,.25);border-radius:12px;background:#020617;color:var(--text);padding:10px 11px;outline:none}textarea{min-height:74px;resize:vertical}input:focus,select:focus,textarea:focus{border-color:rgba(56,189,248,.7);box-shadow:0 0 0 3px rgba(56,189,248,.11)}.btn{border:0;border-radius:12px;background:linear-gradient(135deg,#0284c7,#0891b2);color:white;padding:10px 12px;font-weight:850}.btn.secondary{background:#1f2937;color:#e5e7eb;border:1px solid var(--line)}.btn.green{background:linear-gradient(135deg,#16a34a,#15803d)}.btn.red{background:linear-gradient(135deg,#dc2626,#991b1b)}.btn.warn{background:linear-gradient(135deg,#f59e0b,#b45309)}.btn:disabled{opacity:.55;cursor:not-allowed}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:rgba(2,6,23,.42)}table{width:100%;border-collapse:collapse;min-width:860px;font-size:12px}th,td{padding:9px 8px;border-bottom:1px solid rgba(148,163,184,.14);vertical-align:middle;white-space:nowrap}th{position:sticky;top:0;background:#0f172a;color:#cbd5e1;text-align:left;font-weight:850;z-index:1}td.memo{max-width:260px;overflow:hidden;text-overflow:ellipsis}.amount{font-weight:950}.in{color:#86efac}.out{color:#fca5a5}.adj{color:#fcd34d}.badge{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:3px 8px;font-size:11px;color:#cbd5e1;background:rgba(15,23,42,.72)}.badge.ok{border-color:rgba(34,197,94,.45);color:#86efac}.badge.warn{border-color:rgba(245,158,11,.45);color:#fcd34d}.badge.bad{border-color:rgba(239,68,68,.45);color:#fca5a5}.notice{border:1px solid rgba(56,189,248,.25);border-radius:14px;background:rgba(14,165,233,.08);padding:12px;margin-bottom:10px}.login-page{min-height:100dvh;display:grid;place-items:center;padding:20px}.login-card{width:min(440px,100%);background:rgba(15,23,42,.95);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:var(--shadow)}.logo{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#38bdf8,#22c55e);font-weight:1000;color:#020617;margin-bottom:14px}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:50;max-width:min(720px,calc(100% - 28px));padding:12px 14px;background:#0f172a;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);display:none}.toast.show{display:block}.loader{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;vertical-align:-2px;margin-right:6px}@keyframes spin{to{transform:rotate(360deg)}}.mini-list{display:grid;gap:8px}.mini-item{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid rgba(148,163,184,.12)}@media(max-width:900px){.app{padding:12px}.topbar{margin:-12px -12px 12px;padding:12px}.grid,.grid.two,.grid.three,.form.two,.form.three{grid-template-columns:1fr}.brand{align-items:flex-start}.userbox{flex-direction:column;align-items:flex-end;gap:4px}.metric .value{font-size:21px}table{min-width:760px}}
   </style>
 </head>
 <body>
-  <div id="loginPage" class="login-page">
-    <div class="login-card">
-      <div class="logo">AXE</div>
-      <h1 style="margin:0 0 6px;font-size:25px;letter-spacing:-.05em">AXE 업무센터</h1>
-      <p class="muted" style="margin:0 0 18px">공금 · 신청 · 월별현황 관리 시스템</p>
-      <div id="apiWarning" class="notice hide"><b>API URL 설정 필요</b><br><span class="small muted">HTML 코드 상단의 API_URL에 Apps Script 배포 URL을 입력해야 합니다.</span></div>
-      <div class="form">
-        <label>닉네임<input id="loginNickname" placeholder="회원목록의 닉네임" autocomplete="username"></label>
-        <label>접속코드<input id="loginCode" type="password" inputmode="numeric" placeholder="개인 접속코드" autocomplete="current-password"></label>
-        <button class="btn" id="loginBtn" onclick="login()">로그인</button>
-      </div>
-      <p class="small muted" style="margin:14px 0 0">홈 화면에 추가하면 앱처럼 사용할 수 있습니다.</p>
-    </div>
-  </div>
-
-  <div id="appPage" class="app hide">
-    <div class="topbar">
-      <div class="brand">
-        <div><h1>AXE 업무센터</h1><p>공금 · 신청 · 월별현황 관리 시스템</p></div>
-        <div class="userbox"><span id="userLabel" class="pill">-</span><button class="btn secondary" onclick="logout()">로그아웃</button></div>
-      </div>
-      <div id="tabs" class="tabs"></div>
-    </div>
-
-    <section id="screenHome" class="screen active"></section>
-    <section id="screenRequest" class="screen"></section>
-    <section id="screenMyStatus" class="screen"></section>
-    <section id="screenLedger" class="screen"></section>
-    <section id="screenMonthly" class="screen"></section>
-    <section id="screenReview" class="screen"></section>
-    <section id="screenAdmin" class="screen"></section>
-  </div>
-
-  <div id="toast" class="toast"></div>
-
+  <div id="loginPage" class="login-page"><div class="login-card"><div class="logo">AXE</div><h1 style="margin:0 0 6px;font-size:25px;letter-spacing:-.05em">AXE 업무센터</h1><p class="muted" style="margin:0 0 18px">공금관리 · 자산관리 · 월별현황</p><div id="apiWarning" class="notice hide"><b>API URL 설정 필요</b><br><span class="small muted">HTML 상단의 AXE_WORKCENTER_API_URL에 Apps Script 배포 URL을 입력해야 합니다.</span></div><div class="form"><label>닉네임<input id="loginNickname" autocomplete="username" placeholder="회원목록의 닉네임"></label><label>접속코드<input id="loginCode" type="password" inputmode="numeric" autocomplete="current-password" placeholder="개인 접속코드"></label><button class="btn" id="loginBtn" onclick="login()">로그인</button></div><p class="small muted" style="margin:14px 0 0">홈 화면에 추가하면 앱처럼 사용할 수 있습니다.</p></div></div>
+  <div id="appPage" class="app hide"><div class="topbar"><div class="brand"><div><h1>AXE 업무센터</h1><p>공금관리 · 자산관리 · 월별현황</p></div><div class="userbox"><span id="userLabel" class="pill">-</span><button class="btn secondary" onclick="logout()">로그아웃</button></div></div><div id="tabs" class="tabs"></div></div><section id="screenHome" class="screen active"></section><section id="screenFund" class="screen"></section><section id="screenRequest" class="screen"></section><section id="screenMonthly" class="screen"></section><section id="screenAsset" class="screen"></section><section id="screenBalance" class="screen"></section></div><div id="toast" class="toast"></div>
 <script>
-const API_URL = (window.AXE_WORKCENTER_API_URL || "").trim();
-const VERSION = "2026-07-06-v1-beta";
-const STORAGE_KEY = "axe_workcenter_session_v1";
-const state = { session:null, data:null, month:"", tab:"home", loading:false };
-
-const TABS = [
-  { id:"home", label:"홈", screen:"screenHome" },
-  { id:"request", label:"공금신청", screen:"screenRequest" },
-  { id:"my", label:"내 현황", screen:"screenMyStatus" },
-  { id:"ledger", label:"공금내역", screen:"screenLedger" },
-  { id:"monthly", label:"월별현황", screen:"screenMonthly" },
-  { id:"review", label:"신청관리", screen:"screenReview", admin:true },
-  { id:"admin", label:"관리", screen:"screenAdmin", admin:true }
-];
-
-window.addEventListener("load", async () => {
-  if(!API_URL) document.getElementById("apiWarning").classList.remove("hide");
-  setupPwa();
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if(saved){
-    try{ state.session = JSON.parse(saved); showApp(); await loadData(); }catch(e){ localStorage.removeItem(STORAGE_KEY); }
-  }
-});
-
-function setupPwa(){
-  if("serviceWorker" in navigator){
-    navigator.serviceWorker.register("sw.js").catch(()=>{});
-  }
-}
-
-function authPayload(){
-  return { member_id: state.session?.member_id, access_code: state.session?.access_code };
-}
-
-async function api(action, data={}){
-  if(!API_URL) throw new Error("API_URL이 비어 있습니다. Apps Script 배포 URL을 HTML에 입력해 주세요.");
-  const payload = { action, ...data };
-  if(action !== "login") payload.auth = authPayload();
-  const res = await fetch(API_URL, { method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload) });
-  const text = await res.text();
-  let json;
-  try{ json = JSON.parse(text); }catch(e){ throw new Error("API 응답을 읽지 못했습니다. 배포 URL 또는 권한을 확인해 주세요."); }
-  if(!json.ok) throw new Error(json.error || "요청 처리 중 오류가 발생했습니다.");
-  return json;
-}
-
-function toast(msg){
-  const el = document.getElementById("toast");
-  el.textContent = msg;
-  el.classList.add("show");
-  clearTimeout(window.__toastTimer);
-  window.__toastTimer = setTimeout(()=>el.classList.remove("show"), 2600);
-}
-
-function fmtMoney(v){
-  const n = Number(String(v??0).replace(/,/g,"")) || 0;
-  return n.toLocaleString("ko-KR") + "원";
-}
-function esc(v){ return String(v ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c])); }
-function today(){ return new Date().toISOString().slice(0,10); }
-function currentMonth(){ return state.month || state.data?.current_month || new Date().toISOString().slice(0,7); }
-function isAdmin(){ return !!state.data?.is_admin || !!state.session?.is_admin; }
-function setBusy(btn, busy, text){ if(!btn) return; if(busy){ btn.dataset.oldText = btn.innerHTML; btn.disabled = true; btn.innerHTML = `<span class="loader"></span>${text||"처리 중"}`; } else { btn.disabled = false; btn.innerHTML = btn.dataset.oldText || btn.innerHTML; } }
-
-async function login(){
-  const btn = document.getElementById("loginBtn");
-  try{
-    setBusy(btn,true,"로그인 중");
-    const nickname = document.getElementById("loginNickname").value.trim();
-    const access_code = document.getElementById("loginCode").value.trim();
-    const res = await api("login", { nickname, access_code });
-    state.session = { ...res.member, access_code };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.session));
-    showApp();
-    await loadData();
-    toast("로그인되었습니다.");
-  }catch(e){ toast(e.message); }
-  finally{ setBusy(btn,false); }
-}
-
-function logout(){
-  localStorage.removeItem(STORAGE_KEY); state.session=null; state.data=null;
-  document.getElementById("appPage").classList.add("hide");
-  document.getElementById("loginPage").classList.remove("hide");
-}
-
-function showApp(){
-  document.getElementById("loginPage").classList.add("hide");
-  document.getElementById("appPage").classList.remove("hide");
-  document.getElementById("userLabel").textContent = `${state.session.nickname} · ${state.session.role}`;
-}
-
-async function loadData(month){
-  state.month = month || state.month || new Date().toISOString().slice(0,7);
-  const res = await api("get_data", { month: state.month });
-  state.data = res;
-  state.month = res.current_month || state.month;
-  renderAll();
-}
-
-function renderAll(){ renderTabs(); renderHome(); renderRequest(); renderMyStatus(); renderLedger(); renderMonthly(); renderReview(); renderAdmin(); switchTab(state.tab || "home"); }
-
-function renderTabs(){
-  const tabs = TABS.filter(t => !t.admin || isAdmin());
-  document.getElementById("tabs").innerHTML = tabs.map(t => `<button class="tab ${state.tab===t.id?'active':''}" onclick="switchTab('${t.id}')">${t.label}</button>`).join("");
-}
-
-function switchTab(id){
-  state.tab = id;
-  TABS.forEach(t => document.getElementById(t.screen)?.classList.toggle("active", t.id===id));
-  document.querySelectorAll(".tab").forEach(btn => btn.classList.remove("active"));
-  [...document.querySelectorAll(".tab")].find(b => b.textContent === (TABS.find(t=>t.id===id)?.label))?.classList.add("active");
-}
-
-function monthSelectHtml(id="monthSelect"){
-  const m = currentMonth();
-  return `<input id="${id}" type="month" value="${esc(m)}" onchange="loadData(this.value)">`;
-}
-
-function renderHome(){
-  const d = state.data || {};
-  const notices = d.notices || [];
-  const fees = d.weekly_fee_by_week || [];
-  document.getElementById("screenHome").innerHTML = `
-    <div class="row between" style="margin-bottom:12px"><div><b>${esc(currentMonth())}</b> 기준</div><div class="row">${monthSelectHtml("homeMonth")}<button class="btn secondary" onclick="loadData(currentMonth())">새로고침</button></div></div>
-    <div class="grid">
-      <div class="card metric"><div class="label">공용계좌 계산잔고</div><div class="value">${fmtMoney(d.summary?.public_balance)}</div></div>
-      <div class="card metric"><div class="label">승인대기</div><div class="value">${d.summary?.pending_requests || 0}건</div></div>
-      <div class="card metric"><div class="label">공금내역</div><div class="value">${d.summary?.ledger_count || 0}건</div></div>
-      <div class="card metric"><div class="label">활동 회원</div><div class="value">${d.summary?.member_count || 0}명</div></div>
-    </div>
-    <div class="grid two" style="margin-top:12px">
-      <div class="card"><h3>공지사항</h3>${notices.length ? notices.map(n=>`<div class="notice"><b>${esc(n['제목'])}</b><div class="small muted" style="margin-top:5px;white-space:pre-wrap">${esc(n['내용'])}</div></div>`).join("") : `<p class="muted small">표시 중인 공지사항이 없습니다.</p>`}</div>
-      <div class="card"><h3>주간공금 기준</h3><div class="tablewrap"><table><thead><tr><th>월</th><th>주차</th><th>기준공금</th></tr></thead><tbody>${fees.map(f=>`<tr><td>${esc(f.month)}</td><td>${f.week}주차</td><td class="amount">${fmtMoney(f.fee)}</td></tr>`).join("")}</tbody></table></div></div>
-    </div>`;
-}
-
-function renderRequest(){
-  const fees = state.data?.weekly_fee_by_week || [];
-  const options = fees.map(f=>`<option value="${f.week}" data-fee="${f.fee}">${f.week}주차 · ${fmtMoney(f.fee)}</option>`).join("");
-  const myReq = state.data?.requests || [];
-  document.getElementById("screenRequest").innerHTML = `
-    <div class="grid two">
-      <div class="card"><h3>공금신청</h3>
-        <div class="form">
-          <label>신청월<input id="reqMonth" type="month" value="${esc(currentMonth())}" onchange="loadData(this.value)"></label>
-          <label>신청주차<select id="reqWeek" onchange="syncRequestAmount()">${options}</select></label>
-          <label>신청금액<input id="reqAmount" inputmode="numeric"></label>
-          <label>입금계좌<input id="reqAccount" value="${esc(state.data?.default_deposit_account || '공용계좌')}"></label>
-          <label>증빙URL<input id="reqEvidence" placeholder="이미지/디스코드/구글드라이브 링크"></label>
-          <label>메모<textarea id="reqMemo" placeholder="추가납부, 정산 사유 등"></textarea></label>
-          <button class="btn" onclick="submitFundRequest(this)">공금신청 등록</button>
-        </div>
-      </div>
-      <div class="card"><h3>내 신청내역</h3>${requestTable(myReq, false)}</div>
-    </div>`;
-  syncRequestAmount();
-}
-
-function syncRequestAmount(){
-  const sel = document.getElementById("reqWeek");
-  const amount = document.getElementById("reqAmount");
-  if(sel && amount) amount.value = sel.options[sel.selectedIndex]?.dataset.fee || "";
-}
-
-async function submitFundRequest(btn){
-  try{
-    setBusy(btn,true,"등록 중");
-    await api("submit_fund_request", {
-      month: document.getElementById("reqMonth").value,
-      week: document.getElementById("reqWeek").value,
-      amount: document.getElementById("reqAmount").value,
-      deposit_account: document.getElementById("reqAccount").value,
-      evidence_url: document.getElementById("reqEvidence").value,
-      memo: document.getElementById("reqMemo").value
-    });
-    toast("공금신청이 등록되었습니다.");
-    await loadData(document.getElementById("reqMonth").value);
-  }catch(e){ toast(e.message); }
-  finally{ setBusy(btn,false); }
-}
-
-function renderMyStatus(){
-  const rows = state.data?.monthly_status || [];
-  document.getElementById("screenMyStatus").innerHTML = `
-    <div class="row between" style="margin-bottom:12px"><h3 style="margin:0">내 월별현황</h3>${monthSelectHtml("myMonth")}</div>
-    <div class="card">${monthlyTable(rows)}</div>`;
-}
-
-function renderLedger(){
-  const ledgers = state.data?.ledgers || [];
-  document.getElementById("screenLedger").innerHTML = `
-    <div class="row between" style="margin-bottom:12px"><h3 style="margin:0">공금내역</h3>${monthSelectHtml("ledgerMonth")}</div>
-    ${isAdmin()?manualLedgerForm():""}
-    <div class="card" style="margin-top:12px">${ledgerTable(ledgers)}</div>`;
-}
-
-function manualLedgerForm(){
-  const members = state.data?.members || [];
-  const memberOpts = `<option value="">직접입력 또는 미지정</option>` + members.filter(m=>m.status==='활동중').map(m=>`<option value="${esc(m.member_id)}">${esc(m.nickname)}</option>`).join("");
-  return `<div class="card"><h3>직접 수입/지출 등록</h3>
-    <div class="form three">
-      <label>날짜<input id="mlDate" type="date" value="${today()}"></label>
-      <label>수입/지출<select id="mlDirection"><option>수입</option><option>지출</option></select></label>
-      <label>금액<input id="mlAmount" inputmode="numeric"></label>
-      <label>유형<input id="mlType" value="직접기입"></label>
-      <label>항목<input id="mlItem" placeholder="전쟁비, 자산구매 등"></label>
-      <label>관련자 선택<select id="mlMember" onchange="syncManualMember()">${memberOpts}</select></label>
-      <label>관련자 직접입력<input id="mlRelated" placeholder="회원 외 관련자"></label>
-      <label>월<input id="mlMonth" type="month" value="${esc(currentMonth())}"></label>
-      <label>주차<input id="mlWeek" inputmode="numeric" placeholder="선택"></label>
-      <label>계좌<input id="mlAccount" value="공용계좌"></label>
-      <label>증빙URL<input id="mlEvidence"></label>
-      <label>잔고반영<select id="mlApply"><option value="Y">Y</option><option value="N">N</option></select></label>
-    </div>
-    <label style="margin-top:10px">메모<textarea id="mlMemo"></textarea></label>
-    <div class="row" style="margin-top:10px"><button class="btn green" onclick="createManualLedger(this)">직접내역 등록</button></div>
-  </div>`;
-}
-
-function syncManualMember(){
-  const sel = document.getElementById("mlMember");
-  const input = document.getElementById("mlRelated");
-  if(sel && input && sel.value){ input.value = sel.options[sel.selectedIndex].textContent; }
-}
-
-async function createManualLedger(btn){
-  try{
-    setBusy(btn,true,"등록 중");
-    await api("create_manual_ledger", {
-      date: document.getElementById("mlDate").value,
-      direction: document.getElementById("mlDirection").value,
-      amount: document.getElementById("mlAmount").value,
-      type: document.getElementById("mlType").value,
-      item: document.getElementById("mlItem").value,
-      related_member_id: document.getElementById("mlMember").value,
-      related_name: document.getElementById("mlRelated").value,
-      month: document.getElementById("mlMonth").value,
-      week: document.getElementById("mlWeek").value,
-      account: document.getElementById("mlAccount").value,
-      evidence_url: document.getElementById("mlEvidence").value,
-      apply_balance: document.getElementById("mlApply").value,
-      memo: document.getElementById("mlMemo").value
-    });
-    toast("공금내역이 등록되었습니다.");
-    await loadData(document.getElementById("mlMonth").value);
-  }catch(e){ toast(e.message); }
-  finally{ setBusy(btn,false); }
-}
-
-function renderMonthly(){
-  const rows = state.data?.monthly_status || [];
-  document.getElementById("screenMonthly").innerHTML = `
-    <div class="row between" style="margin-bottom:12px"><h3 style="margin:0">월별현황</h3><div class="row">${monthSelectHtml("monthlyMonth")}${isAdmin()?`<button class="btn secondary" onclick="recalculateMonthly(this)">재계산</button>`:""}</div></div>
-    <div class="card">${monthlyTable(rows)}</div>`;
-}
-
-async function recalculateMonthly(btn){
-  if(!confirm(`${currentMonth()} 월별현황을 재계산할까요?`)) return;
-  try{ setBusy(btn,true,"계산 중"); await api("recalculate_monthly", { month: currentMonth() }); toast("월별현황을 재계산했습니다."); await loadData(currentMonth()); }
-  catch(e){ toast(e.message); } finally{ setBusy(btn,false); }
-}
-
-function renderReview(){
-  if(!isAdmin()) return;
-  const rows = state.data?.requests || [];
-  document.getElementById("screenReview").innerHTML = `<div class="row between" style="margin-bottom:12px"><h3 style="margin:0">공금신청 관리</h3>${monthSelectHtml("reviewMonth")}</div><div class="card">${requestTable(rows, true)}</div>`;
-}
-
-function renderAdmin(){
-  if(!isAdmin()) return;
-  document.getElementById("screenAdmin").innerHTML = `
-    <div class="grid two">
-      <div class="card"><h3>잔고검증</h3>
-        <div class="form">
-          <label>기준월<input id="bcMonth" type="month" value="${esc(currentMonth())}"></label>
-          <label>인게임 공용계좌 잔고<input id="bcGame" inputmode="numeric" placeholder="숫자만 입력"></label>
-          <label>조치내용<textarea id="bcMemo"></textarea></label>
-          <button class="btn" onclick="createBalanceCheck(this)">잔고검증 등록</button>
-        </div>
-      </div>
-      <div class="card"><h3>시스템 상태</h3>
-        <p class="small muted">버전: ${VERSION}</p>
-        <p class="small muted">현재 월: ${esc(currentMonth())}</p>
-        <p class="small muted">PWA: 홈 화면 추가 지원</p>
-      </div>
-    </div>`;
-}
-
-async function createBalanceCheck(btn){
-  try{ setBusy(btn,true,"등록 중"); const res = await api("balance_check", { month: document.getElementById("bcMonth").value, game_balance: document.getElementById("bcGame").value, action_memo: document.getElementById("bcMemo").value }); toast(`잔고검증 등록 완료 · 차이 ${fmtMoney(res.diff)}`); await loadData(document.getElementById("bcMonth").value); }
-  catch(e){ toast(e.message); } finally{ setBusy(btn,false); }
-}
-
-function requestTable(rows, adminMode){
-  if(!rows.length) return `<p class="muted small">표시할 신청내역이 없습니다.</p>`;
-  const sorted = [...rows].sort((a,b)=>String(b['신청일시']).localeCompare(String(a['신청일시'])));
-  return `<div class="tablewrap"><table><thead><tr><th>신청일시</th><th>월</th><th>주차</th><th>닉네임</th><th>금액</th><th>상태</th><th>처리자</th>${adminMode?'<th>관리</th>':''}</tr></thead><tbody>${sorted.map(r=>`<tr><td>${esc(r['신청일시'])}</td><td>${esc(r['신청월'])}</td><td>${esc(r['신청주차'])}</td><td>${esc(r['닉네임'])}</td><td class="amount">${fmtMoney(r['신청금액'])}</td><td>${statusBadge(r['상태'])}</td><td>${esc(r['처리자']||'-')}</td>${adminMode?`<td>${r['상태']==='대기'?`<button class="btn green" onclick="reviewRequest('${esc(r.request_id)}','approve',this)">승인</button> <button class="btn red" onclick="reviewRequest('${esc(r.request_id)}','reject',this)">반려</button>`:'-'}</td>`:''}</tr>`).join("")}</tbody></table></div>`;
-}
-
-async function reviewRequest(id, decision, btn){
-  const reason = decision === 'reject' ? prompt('반려사유를 입력하세요.', '') || '' : '';
-  if(decision === 'reject' && !confirm('반려 처리할까요?')) return;
-  if(decision === 'approve' && !confirm('승인 후 공금내역을 생성할까요?')) return;
-  try{ setBusy(btn,true,"처리 중"); await api("review_fund_request", { request_id:id, decision, reason }); toast(decision==='approve'?'승인 처리되었습니다.':'반려 처리되었습니다.'); await loadData(currentMonth()); }
-  catch(e){ toast(e.message); } finally{ setBusy(btn,false); }
-}
-
-function ledgerTable(rows){
-  if(!rows.length) return `<p class="muted small">표시할 공금내역이 없습니다.</p>`;
-  const filtered = rows.filter(r => !currentMonth() || r['월'] === currentMonth()).sort((a,b)=>String(b['날짜']||b['등록일시']).localeCompare(String(a['날짜']||a['등록일시'])));
-  if(!filtered.length) return `<p class="muted small">선택 월의 공금내역이 없습니다.</p>`;
-  return `<div class="tablewrap"><table><thead><tr><th>날짜</th><th>유형</th><th>항목</th><th>관련자</th><th>월/주차</th><th>금액</th><th>구분</th><th>계좌</th><th>등록자</th>${isAdmin()?'<th>관리</th>':''}</tr></thead><tbody>${filtered.map(r=>{const dir=r['수입지출']; return `<tr><td>${esc(r['날짜'])}</td><td>${esc(r['유형'])}</td><td>${esc(r['항목'])}</td><td>${esc(r['관련자']||'-')}</td><td>${esc(r['월'])} / ${esc(r['주차']||'-')}</td><td class="amount ${dir==='지출'?'out':'in'}">${fmtMoney(r['금액'])}</td><td>${esc(dir)}</td><td>${esc(r['계좌'])}</td><td>${esc(r['등록자']||'-')}</td>${isAdmin()?`<td><button class="btn secondary" onclick="showLedgerMemo('${esc(r.ledger_id)}')">메모</button> <button class="btn red" onclick="deleteLedger('${esc(r.ledger_id)}',this)">삭제</button></td>`:''}</tr>`}).join("")}</tbody></table></div>`;
-}
-
-function showLedgerMemo(id){
-  const r = (state.data?.ledgers||[]).find(x=>x.ledger_id===id);
-  if(!r) return;
-  alert(`메모: ${r['메모']||'-'}\n\n등록자: ${r['등록자']||'-'}\n등록일시: ${r['등록일시']||'-'}\n수정자: ${r['수정자']||'-'}\n수정일시: ${r['수정일시']||'-'}\n증빙: ${r['증빙URL']||'-'}`);
-}
-
-async function deleteLedger(id, btn){
-  const reason = prompt('삭제사유를 입력하세요.', '관리자 삭제');
-  if(reason === null) return;
-  if(!confirm('해당 공금내역을 삭제하고 삭제로그에 기록할까요?')) return;
-  try{ setBusy(btn,true,"삭제 중"); await api("delete_ledger", { ledger_id:id, reason }); toast("공금내역을 삭제했습니다."); await loadData(currentMonth()); }
-  catch(e){ toast(e.message); } finally{ setBusy(btn,false); }
-}
-
-function monthlyTable(rows){
-  if(!rows.length) return `<p class="muted small">표시할 월별현황이 없습니다.</p>`;
-  const sorted = [...rows].sort((a,b)=>String(a['닉네임']).localeCompare(String(b['닉네임'])) || Number(a['주차'])-Number(b['주차']));
-  return `<div class="tablewrap"><table><thead><tr><th>닉네임</th><th>주차</th><th>기준공금</th><th>납부합계</th><th>부족금액</th><th>상태</th><th>면제</th></tr></thead><tbody>${sorted.map(r=>`<tr><td>${esc(r['닉네임'])}</td><td>${esc(r['주차'])}주차</td><td>${fmtMoney(r['기준공금'])}</td><td class="amount">${fmtMoney(r['납부합계'])}</td><td>${fmtMoney(r['부족금액'])}</td><td>${statusBadge(r['상태'])}</td><td>${esc(r['면제여부']||'N')}</td></tr>`).join("")}</tbody></table></div>`;
-}
-
-function statusBadge(s){
-  s = String(s||'-');
-  let cls = '';
-  if(['승인','납부완료','정상','일치'].includes(s)) cls='ok';
-  if(['대기','부족'].includes(s)) cls='warn';
-  if(['반려','미납','삭제','차이발생'].includes(s)) cls='bad';
-  return `<span class="badge ${cls}">${esc(s)}</span>`;
-}
+const API_URL=(window.AXE_WORKCENTER_API_URL||"").trim();
+const VERSION="2026-07-06-v1.1-axe-net-style";
+const STORAGE_KEY="axe_workcenter_session_v11";
+const state={session:null,data:null,month:"",tab:"home"};
+const TABS=[{id:"home",label:"홈",screen:"screenHome"},{id:"request",label:"공금신청",screen:"screenRequest"},{id:"fund",label:"공금관리",screen:"screenFund"},{id:"monthly",label:"월별현황",screen:"screenMonthly"},{id:"asset",label:"자산관리",screen:"screenAsset"},{id:"balance",label:"잔고검증",screen:"screenBalance",admin:true}];
+window.addEventListener("load",async()=>{ if(!API_URL) document.getElementById("apiWarning").classList.remove("hide"); if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{}); const saved=localStorage.getItem(STORAGE_KEY); if(saved){ try{ state.session=JSON.parse(saved); showApp(); await loadData(); }catch(e){ localStorage.removeItem(STORAGE_KEY); } }});
+function authPayload(){return{member_id:state.session?.member_id,access_code:state.session?.access_code}}
+async function api(action,data={}){ if(!API_URL) throw new Error("API URL이 비어 있습니다."); const payload={action,...data}; if(action!=="login") payload.auth=authPayload(); const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)}); const text=await res.text(); let json; try{json=JSON.parse(text)}catch(e){throw new Error("API 응답을 읽지 못했습니다. 배포 URL 또는 권한을 확인해 주세요.")} if(!json.ok) throw new Error(json.error||"요청 처리 중 오류가 발생했습니다."); return json; }
+async function login(){const btn=document.getElementById("loginBtn");try{setBusy(btn,true,"로그인 중");const nickname=document.getElementById("loginNickname").value;const code=document.getElementById("loginCode").value;const res=await api("login",{nickname,access_code:code});state.session={...res.member,access_code:code};localStorage.setItem(STORAGE_KEY,JSON.stringify(state.session));showApp();await loadData();}catch(e){toast(e.message)}finally{setBusy(btn,false)}}
+function showApp(){document.getElementById("loginPage").classList.add("hide");document.getElementById("appPage").classList.remove("hide");document.getElementById("userLabel").textContent=`${state.session.nickname} · ${state.session.role||state.session.position}`;}
+function logout(){localStorage.removeItem(STORAGE_KEY);location.reload()}
+async function loadData(month){try{state.month=month||state.month||currentMonth();const res=await api("get_data",{month:state.month});state.data=res;state.month=res.current_month||state.month;renderAll();}catch(e){toast(e.message)}}
+function renderAll(){renderTabs();renderHome();renderRequest();renderFund();renderMonthly();renderAsset();renderBalance();switchTab(state.tab||"home")}
+function renderTabs(){document.getElementById("tabs").innerHTML=TABS.filter(t=>!t.admin||isAdmin()).map(t=>`<button class="tab ${state.tab===t.id?'active':''}" onclick="switchTab('${t.id}')">${t.label}</button>`).join("")}
+function switchTab(id){state.tab=id;TABS.forEach(t=>document.getElementById(t.screen)?.classList.toggle("active",t.id===id));renderTabs()}
+function monthSelectHtml(id="monthSelect"){return `<input id="${id}" type="month" value="${esc(currentMonth())}" onchange="loadData(this.value)">`}
+function renderHome(){const d=state.data||{}, b=d.balance||{}, latest=d.latest_balance_check||null, fees=d.weekly_fee_by_week||[], notices=d.notices||[];const diff=latest?num(latest['차이금액']):0;document.getElementById("screenHome").innerHTML=`<div class="section-title"><h2>${esc(currentMonth())} 업무현황</h2><div class="row">${monthSelectHtml("homeMonth")}<button class="btn secondary" onclick="loadData(currentMonth())">새로고침</button></div></div><div class="grid"><div class="card metric"><div class="label">공용계좌 계산잔고</div><div class="value">${fmtMoney(b.public_balance)}</div></div><div class="card metric"><div class="label">최근 인게임 잔고</div><div class="value">${latest?fmtMoney(latest['인게임잔고']):'-'}</div><div class="small muted">${latest?esc(latest['검증일시']):'잔고검증 기록 없음'}</div></div><div class="card metric"><div class="label">잔고 차이</div><div class="value ${diff===0?'in':'out'}">${latest?fmtMoney(diff):'-'}</div></div><div class="card metric"><div class="label">승인대기</div><div class="value">${d.summary?.pending_requests||0}건</div></div></div><div class="grid three" style="margin-top:12px"><div class="card"><h3>공지사항</h3>${notices.length?notices.map(n=>`<div class="notice"><b>${esc(n['제목'])}</b><div class="small muted" style="margin-top:5px;white-space:pre-wrap">${esc(n['내용'])}</div></div>`).join(""):`<p class="muted small">표시 중인 공지사항이 없습니다.</p>`}</div><div class="card"><h3>주간공금 기준</h3>${miniFees(fees)}</div><div class="card"><h3>자산 요약</h3><div class="mini-list"><div class="mini-item"><span>전체 자산</span><b>${d.asset_summary?.total||0}개</b></div><div class="mini-item"><span>지급중</span><b>${d.asset_summary?.assigned||0}개</b></div><div class="mini-item"><span>보관중</span><b>${d.asset_summary?.available||0}개</b></div><div class="mini-item"><span>취득금액 합계</span><b>${fmtMoney(d.asset_summary?.value||0)}</b></div></div></div></div>`}
+function miniFees(rows){return `<div class="mini-list">${rows.map(f=>`<div class="mini-item"><span>${f.week}주차</span><b>${fmtMoney(f.fee)}</b></div>`).join("")}</div>`}
+function renderRequest(){const fees=state.data?.weekly_fee_by_week||[], options=fees.map(f=>`<option value="${f.week}" data-fee="${f.fee}">${f.week}주차 · ${fmtMoney(f.fee)}</option>`).join(""), myReq=state.data?.requests||[];document.getElementById("screenRequest").innerHTML=`<div class="grid two"><div class="card"><h3>공금신청</h3><div class="form"><label>신청월<input id="reqMonth" type="month" value="${esc(currentMonth())}" onchange="loadData(this.value)"></label><label>신청주차<select id="reqWeek" onchange="syncRequestAmount()">${options}</select></label><label>신청금액<input id="reqAmount" inputmode="numeric"></label><label>입금계좌<input id="reqAccount" value="${esc(state.data?.default_deposit_account||'공용계좌')}"></label><label>증빙URL<input id="reqEvidence" placeholder="이미지/디스코드/구글드라이브 링크"></label><label>메모<textarea id="reqMemo" placeholder="추가납부, 정산 사유 등"></textarea></label><button class="btn" onclick="submitFundRequest(this)">공금신청 등록</button></div></div><div class="card"><h3>내 신청내역</h3>${requestTable(myReq,false)}</div></div>`;syncRequestAmount()}
+function syncRequestAmount(){const sel=document.getElementById("reqWeek"), amount=document.getElementById("reqAmount");if(sel&&amount)amount.value=sel.options[sel.selectedIndex]?.dataset.fee||""}
+async function submitFundRequest(btn){try{setBusy(btn,true,"등록 중");await api("submit_fund_request",{month:val("reqMonth"),week:val("reqWeek"),amount:val("reqAmount"),deposit_account:val("reqAccount"),evidence_url:val("reqEvidence"),memo:val("reqMemo")});toast("공금신청이 등록되었습니다.");await loadData(val("reqMonth"))}catch(e){toast(e.message)}finally{setBusy(btn,false)}}
+function renderFund(){const d=state.data||{}, b=d.balance||{}, ledgers=d.ledgers||[], reqs=d.requests||[];document.getElementById("screenFund").innerHTML=`<div class="section-title"><h2>공금관리</h2><div class="row">${monthSelectHtml("fundMonth")}</div></div><div class="grid"><div class="card metric"><div class="label">공용계좌 잔고</div><div class="value">${fmtMoney(b.public_balance)}</div></div><div class="card metric"><div class="label">수입 합계</div><div class="value in">${fmtMoney(b.public_income)}</div></div><div class="card metric"><div class="label">지출 합계</div><div class="value out">${fmtMoney(b.public_expense)}</div></div><div class="card metric"><div class="label">조정 합계</div><div class="value adj">${fmtMoney(b.public_adjustment)}</div></div></div>${isAdmin()?manualLedgerForm()+`<div class="card" style="margin-top:12px"><h3>공금신청 관리</h3>${requestTable(reqs,true)}</div>`:""}<div class="card" style="margin-top:12px"><h3>공금내역</h3>${ledgerTable(ledgers)}</div>`}
+function manualLedgerForm(){const members=state.data?.members||[];const opts=`<option value="">직접입력 또는 미지정</option>`+members.filter(m=>m.status==='활동중').map(m=>`<option value="${esc(m.member_id)}">${esc(m.nickname)}</option>`).join("");return `<div class="card" style="margin-top:12px"><h3>직접기입</h3><div class="form three"><label>날짜<input id="mlDate" type="date" value="${today()}"></label><label>수입지출<select id="mlDirection"><option>수입</option><option>지출</option><option>조정</option></select></label><label>금액<input id="mlAmount" inputmode="numeric"></label><label>유형<select id="mlType"><option>직접기입</option><option>기타수입</option><option>지출</option><option>조정</option><option>자산</option></select></label><label>항목<input id="mlItem" placeholder="전쟁, 의뢰비, 자산구매 등"></label><label>관련자 선택<select id="mlMember" onchange="syncManualMember()">${opts}</select></label><label>관련자 직접입력<input id="mlRelated" placeholder="회원 외 관련자"></label><label>월<input id="mlMonth" type="month" value="${esc(currentMonth())}"></label><label>주차<input id="mlWeek" inputmode="numeric" placeholder="선택"></label><label>계좌<select id="mlAccount"><option>공용계좌</option><option>회사잔고</option></select></label><label>증빙URL<input id="mlEvidence"></label><label>잔고반영<select id="mlApply"><option value="TRUE">TRUE</option><option value="FALSE">FALSE</option></select></label></div><label style="margin-top:10px">메모<textarea id="mlMemo"></textarea></label><div class="row" style="margin-top:10px"><button class="btn green" onclick="createManualLedger(this)">직접내역 등록</button></div></div>`}
+function syncManualMember(){const sel=document.getElementById("mlMember"), input=document.getElementById("mlRelated");if(sel&&input&&sel.value)input.value=sel.options[sel.selectedIndex].textContent}
+async function createManualLedger(btn){try{setBusy(btn,true,"등록 중");await api("create_manual_ledger",{date:val("mlDate"),direction:val("mlDirection"),amount:val("mlAmount"),type:val("mlType"),item:val("mlItem"),related_member_id:val("mlMember"),related_name:val("mlRelated"),month:val("mlMonth"),week:val("mlWeek"),account:val("mlAccount"),evidence_url:val("mlEvidence"),apply_balance:val("mlApply"),memo:val("mlMemo")});toast("공금내역이 등록되었습니다.");await loadData(val("mlMonth"))}catch(e){toast(e.message)}finally{setBusy(btn,false)}}
+function renderMonthly(){const rows=state.data?.monthly_status||[];document.getElementById("screenMonthly").innerHTML=`<div class="section-title"><h2>월별현황</h2><div class="row">${monthSelectHtml("monthlyMonth")}${isAdmin()?`<button class="btn secondary" onclick="recalculateMonthly(this)">재계산</button>`:""}</div></div><div class="card">${monthlyTable(rows)}</div>`}
+async function recalculateMonthly(btn){if(!confirm(`${currentMonth()} 월별현황을 재계산할까요?`))return;try{setBusy(btn,true,"계산 중");await api("recalculate_monthly",{month:currentMonth()});toast("월별현황을 재계산했습니다.");await loadData(currentMonth())}catch(e){toast(e.message)}finally{setBusy(btn,false)}}
+function renderAsset(){const d=state.data||{}, assets=d.assets||[], logs=d.asset_logs||[], s=d.asset_summary||{};document.getElementById("screenAsset").innerHTML=`<div class="section-title"><h2>자산관리</h2><span class="pill">AXE NET 자산관리 기준 용어 적용</span></div><div class="grid"><div class="card metric"><div class="label">전체 자산</div><div class="value">${s.total||0}개</div></div><div class="card metric"><div class="label">지급중</div><div class="value">${s.assigned||0}개</div></div><div class="card metric"><div class="label">보관중</div><div class="value">${s.available||0}개</div></div><div class="card metric"><div class="label">취득금액</div><div class="value">${fmtMoney(s.value||0)}</div></div></div><div class="card" style="margin-top:12px"><h3>자산목록</h3>${assetTable(assets)}</div><div class="card" style="margin-top:12px"><h3>자산이력</h3>${assetLogTable(logs)}</div>`}
+function renderBalance(){if(!isAdmin())return;const d=state.data||{}, b=d.balance||{}, latest=d.latest_balance_check;document.getElementById("screenBalance").innerHTML=`<div class="section-title"><h2>잔고검증</h2><div class="row">${monthSelectHtml("balanceMonth")}</div></div><div class="grid three"><div class="card metric"><div class="label">홈페이지 계산잔고</div><div class="value">${fmtMoney(b.public_balance)}</div></div><div class="card metric"><div class="label">최근 인게임 잔고</div><div class="value">${latest?fmtMoney(latest['인게임잔고']):'-'}</div></div><div class="card metric"><div class="label">최근 차이금액</div><div class="value ${latest&&num(latest['차이금액'])!==0?'out':'in'}">${latest?fmtMoney(latest['차이금액']):'-'}</div></div></div><div class="grid two" style="margin-top:12px"><div class="card"><h3>잔고검증 등록</h3><div class="form"><label>기준월<input id="bcMonth" type="month" value="${esc(currentMonth())}"></label><label>인게임 공용계좌 잔고<input id="bcGame" inputmode="numeric" placeholder="숫자만 입력"></label><label>조치내용<textarea id="bcMemo"></textarea></label><button class="btn" onclick="createBalanceCheck(this)">잔고검증 등록</button></div></div><div class="card"><h3>잔고 계산 기준</h3><div class="mini-list"><div class="mini-item"><span>대상 계좌</span><b>공용계좌</b></div><div class="mini-item"><span>잔고반영여부</span><b>TRUE/Y</b></div><div class="mini-item"><span>수입</span><b class="in">+</b></div><div class="mini-item"><span>지출</span><b class="out">-</b></div><div class="mini-item"><span>조정</span><b class="adj">금액 부호 그대로</b></div></div></div></div>`}
+async function createBalanceCheck(btn){try{setBusy(btn,true,"등록 중");const res=await api("balance_check",{month:val("bcMonth"),game_balance:val("bcGame"),action_memo:val("bcMemo")});toast(`잔고검증 등록 완료 · 차이 ${fmtMoney(res.diff)}`);await loadData(val("bcMonth"))}catch(e){toast(e.message)}finally{setBusy(btn,false)}}
+function requestTable(rows,adminMode){if(!rows.length)return`<p class="muted small">표시할 신청내역이 없습니다.</p>`;const sorted=[...rows].sort((a,b)=>String(b['신청일시']).localeCompare(String(a['신청일시'])));return`<div class="tablewrap"><table><thead><tr><th>신청일시</th><th>월</th><th>주차</th><th>닉네임</th><th>금액</th><th>상태</th><th>처리자</th>${adminMode?'<th>관리</th>':''}</tr></thead><tbody>${sorted.map(r=>`<tr><td>${esc(r['신청일시'])}</td><td>${esc(r['신청월'])}</td><td>${esc(r['신청주차'])}</td><td>${esc(r['닉네임'])}</td><td class="amount">${fmtMoney(r['신청금액'])}</td><td>${statusBadge(r['상태'])}</td><td>${esc(r['처리자']||'-')}</td>${adminMode?`<td>${r['상태']==='대기'?`<button class="btn green" onclick="reviewRequest('${esc(r.request_id)}','approve',this)">승인</button> <button class="btn red" onclick="reviewRequest('${esc(r.request_id)}','reject',this)">반려</button>`:'-'}</td>`:''}</tr>`).join("")}</tbody></table></div>`}
+async function reviewRequest(id,decision,btn){const reason=decision==='reject'?prompt('반려사유를 입력하세요.','')||'':'';if(decision==='reject'&&!confirm('반려 처리할까요?'))return;if(decision==='approve'&&!confirm('승인 후 공금내역을 생성할까요?'))return;try{setBusy(btn,true,"처리 중");await api("review_fund_request",{request_id:id,decision,reason});toast(decision==='approve'?'승인 처리되었습니다.':'반려 처리되었습니다.');await loadData(currentMonth())}catch(e){toast(e.message)}finally{setBusy(btn,false)}}
+function ledgerTable(rows){if(!rows.length)return`<p class="muted small">표시할 공금내역이 없습니다.</p>`;const sorted=[...rows].sort((a,b)=>String(b['날짜']||b['등록일시']).localeCompare(String(a['날짜']||a['등록일시'])));return`<div class="tablewrap"><table><thead><tr><th>날짜</th><th>유형</th><th>항목</th><th>관련자</th><th>월/주차</th><th>금액</th><th>수입지출</th><th>계좌</th><th>메모</th>${isAdmin()?'<th>관리</th>':''}</tr></thead><tbody>${sorted.map(r=>{const dir=r['수입지출'],cls=dir==='지출'?'out':(dir==='조정'?'adj':'in');return`<tr><td>${esc(r['날짜'])}</td><td>${esc(r['유형'])}</td><td>${esc(r['항목'])}</td><td>${esc(r['관련자']||'-')}</td><td>${esc(r['월']||'-')} / ${esc(r['주차']||'-')}</td><td class="amount ${cls}">${fmtMoney(r['금액'])}</td><td>${esc(dir)}</td><td>${esc(r['계좌'])}</td><td class="memo">${esc(r['메모']||'-')}</td>${isAdmin()?`<td><button class="btn secondary" onclick="showLedgerMemo('${esc(r.ledger_id)}')">메모보기</button> <button class="btn red" onclick="deleteLedger('${esc(r.ledger_id)}',this)">삭제</button></td>`:''}</tr>`}).join("")}</tbody></table></div>`}
+function showLedgerMemo(id){const r=(state.data?.ledgers||[]).find(x=>x.ledger_id===id);if(!r)return;alert(`메모: ${r['메모']||'-'}\n\n등록정보\n등록자: ${r['등록자']||'-'}\n등록일시: ${r['등록일시']||'-'}\n수정자: ${r['수정자']||'-'}\n수정일시: ${r['수정일시']||'-'}\n증빙: ${r['증빙URL']||'-'}`)}
+async function deleteLedger(id,btn){const reason=prompt('삭제사유를 입력하세요.','관리자 삭제');if(reason===null)return;if(!confirm('해당 공금내역을 삭제하고 삭제로그에 기록할까요?'))return;try{setBusy(btn,true,"삭제 중");await api("delete_ledger",{ledger_id:id,reason});toast("공금내역을 삭제했습니다.");await loadData(currentMonth())}catch(e){toast(e.message)}finally{setBusy(btn,false)}}
+function monthlyTable(rows){if(!rows.length)return`<p class="muted small">표시할 월별현황이 없습니다.</p>`;const sorted=[...rows].sort((a,b)=>String(a['닉네임']).localeCompare(String(b['닉네임']))||Number(a['주차'])-Number(b['주차']));return`<div class="tablewrap"><table><thead><tr><th>닉네임</th><th>주차</th><th>기준공금</th><th>납부합계</th><th>부족금액</th><th>상태</th><th>면제</th><th>납부내역</th></tr></thead><tbody>${sorted.map(r=>`<tr><td>${esc(r['닉네임'])}</td><td>${esc(r['주차'])}주차</td><td>${fmtMoney(r['기준공금'])}</td><td class="amount">${fmtMoney(r['납부합계'])}</td><td>${fmtMoney(r['부족금액'])}</td><td>${statusBadge(r['상태'])}</td><td>${esc(r['면제여부']||'N')}</td><td class="memo">${esc(r['납부내역ID목록']||'-')}</td></tr>`).join("")}</tbody></table></div>`}
+function assetTable(rows){if(!rows.length)return`<p class="muted small">표시할 자산목록이 없습니다.</p>`;const sorted=[...rows].sort((a,b)=>String(a['자산분류']).localeCompare(String(b['자산분류']))||String(a['자산명']).localeCompare(String(b['자산명'])));return`<div class="tablewrap"><table><thead><tr><th>자산분류</th><th>자산명</th><th>고유번호</th><th>수량</th><th>상태</th><th>현재보유자</th><th>지급일</th><th>취득금액</th><th>메모</th></tr></thead><tbody>${sorted.map(a=>`<tr><td>${esc(a['자산분류'])}</td><td>${esc(a['자산명'])}</td><td>${esc(a['고유번호'])}</td><td>${esc(a['수량']||'1')} ${esc(a['단위']||'')}</td><td>${statusBadge(a['상태'])}</td><td>${esc(a['현재보유자']||'-')}</td><td>${esc(a['지급일']||'-')}</td><td>${fmtMoney(a['취득금액'])}</td><td class="memo">${esc(a['메모']||'-')}</td></tr>`).join("")}</tbody></table></div>`}
+function assetLogTable(rows){if(!rows.length)return`<p class="muted small">표시할 자산이력이 없습니다.</p>`;const sorted=[...rows].sort((a,b)=>String(b['처리일시']).localeCompare(String(a['처리일시'])));return`<div class="tablewrap"><table><thead><tr><th>처리일시</th><th>처리유형</th><th>자산명</th><th>대상자</th><th>수량</th><th>상태변경</th><th>처리자</th><th>메모</th></tr></thead><tbody>${sorted.map(a=>`<tr><td>${esc(a['처리일시'])}</td><td>${esc(a['처리유형'])}</td><td>${esc(a['자산명'])}</td><td>${esc(a['대상자']||'-')}</td><td>${esc(a['수량']||'-')}</td><td>${esc(a['상태변경전']||'-')} → ${esc(a['상태변경후']||'-')}</td><td>${esc(a['처리자']||'-')}</td><td class="memo">${esc(a['메모']||'-')}</td></tr>`).join("")}</tbody></table></div>`}
+function statusBadge(s){s=String(s||'-');let cls='';if(['승인','납부완료','정상','일치','보관중','지급중','보유중','회수','지급'].includes(s))cls='ok';if(['대기','부족','조정','미배정'].includes(s))cls='warn';if(['반려','미납','삭제','차이발생','분실'].includes(s))cls='bad';return`<span class="badge ${cls}">${esc(s)}</span>`}
+function val(id){return document.getElementById(id)?.value||""}function currentMonth(){return state.data?.current_month||state.month||new Date().toISOString().slice(0,7)}function today(){return new Date().toISOString().slice(0,10)}function isAdmin(){return !!state.session?.is_admin}function num(v){const n=Number(String(v??'').replace(/,/g,''));return isNaN(n)?0:n}function fmtMoney(v){if(v===undefined||v===null||v==='')return'-';return `${num(v).toLocaleString()}원`}function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}function setBusy(btn,busy,label){if(!btn)return;if(busy){btn.dataset.old=btn.innerHTML;btn.disabled=true;btn.innerHTML=`<span class="loader"></span>${label||'처리 중'}`}else{btn.disabled=false;btn.innerHTML=btn.dataset.old||btn.innerHTML}}function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),3200)}
 </script>
 </body>
 </html>
