@@ -1,26 +1,9 @@
-const AXE_WORKCENTER_CACHE = 'axe-workcenter-v1-beta-20260706';
-const ASSETS = ['./', './index.html', './manifest.webmanifest'];
-
-self.addEventListener('install', event => {
-  event.waitUntil(caches.open(AXE_WORKCENTER_CACHE).then(cache => cache.addAll(ASSETS)).catch(() => null));
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.map(key => key === AXE_WORKCENTER_CACHE ? null : caches.delete(key))))
-  );
-  self.clients.claim();
-});
-
+const CACHE_NAME = 'axe-workcenter-v1-6-1';
+const APP_SHELL = ['./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
+self.addEventListener('install', event => { self.skipWaiting(); event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).catch(()=>{})); });
+self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))); self.clients.claim(); });
 self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
-  event.respondWith(
-    fetch(req).then(res => {
-      const copy = res.clone();
-      caches.open(AXE_WORKCENTER_CACHE).then(cache => cache.put(req, copy)).catch(() => null);
-      return res;
-    }).catch(() => caches.match(req).then(cached => cached || caches.match('./index.html')))
-  );
+  event.respondWith(fetch(req).then(res => { const copy=res.clone(); if(new URL(req.url).origin===location.origin){ caches.open(CACHE_NAME).then(cache=>cache.put(req,copy)).catch(()=>{}); } return res; }).catch(()=>caches.match(req).then(cached=>cached||caches.match('./index.html'))));
 });
